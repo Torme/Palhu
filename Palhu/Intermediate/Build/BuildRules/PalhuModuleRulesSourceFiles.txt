@@ -1,0 +1,3 @@
+C:\Users\Alexis\Documents\GitHub\Palhu\Palhu\Source\Palhu\Palhu.Build.cs
+C:\Users\Alexis\Documents\GitHub\Palhu\Palhu\Source\Palhu.Target.cs
+C:\Users\Alexis\Documents\GitHub\Palhu\Palhu\Source\PalhuEditor.Target.cs

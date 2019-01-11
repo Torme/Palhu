@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\Palhu.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{CDE78824-F04D-44C1-948E-9D1DB39C8F2B}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Palhu.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\PalhuEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{26BF8733-CB25-41C0-AB50-35041D4CAFF6}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\Palhu">
+      <UniqueIdentifier>{EE73F601-A9A9-4FA1-9059-B0ACFE47DCE4}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Palhu\Palhu.Build.cs">
+      <Filter>Source\Palhu</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\Palhu\Palhu.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\Palhu.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Palhu\PalhuGameMode.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\PalhuGameMode.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Palhu\PalhuHud.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\PalhuHud.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Palhu\PalhuPawn.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\PalhuPawn.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Palhu\PalhuWheelFront.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\PalhuWheelFront.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Palhu\PalhuWheelRear.cpp">
+      <Filter>Source\Palhu</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Palhu\PalhuWheelRear.h">
+      <Filter>Source\Palhu</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
