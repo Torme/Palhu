@@ -36,6 +36,7 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* WeaponsBase;
+	
 	//UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* WeaponMesh;
