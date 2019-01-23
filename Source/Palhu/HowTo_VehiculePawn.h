@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehicle.h"
+#include "VehicleWheel.h"
 
 #include "HowTo_VehiculePawn.generated.h"
 
@@ -12,6 +13,7 @@ class USpringArmComponent;
 class UInputComponent;
 class UStaticMeshComponent;
 class UWeaponComponent;
+class UHealthComponent;
 
 UCLASS(config=Game)
 class AHowTo_VehiculePawn : public AWheeledVehicle
@@ -36,13 +38,16 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* WeaponsBase;
-	
-	//UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(Category = Weapon, EditAnywhere)
 	UStaticMeshComponent* WeaponMesh;
-
-	UPROPERTY(EditAnywhere)
+	
+	UPROPERTY(Category = Wheels, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class USceneComponent* WheelsBase;
+	
+	UPROPERTY(Category = Weapon, EditAnywhere)
 	UWeaponComponent* WeaponComponent;
+	UPROPERTY(Category = Health, EditAnywhere)
+	UHealthComponent* HealthComponent;
 	
 public:
 	AHowTo_VehiculePawn();
