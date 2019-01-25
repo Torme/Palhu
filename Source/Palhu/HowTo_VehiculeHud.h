@@ -19,4 +19,8 @@ public:
 	// Begin AHUD interface
 	virtual void DrawHUD() override;
 	// End AHUD interface
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	UTexture2D* CrossHairTexture;
 };
