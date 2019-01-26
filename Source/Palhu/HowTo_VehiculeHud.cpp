@@ -14,10 +14,6 @@
 
 #define LOCTEXT_NAMESPACE "VehicleHUD"
 
-#ifndef HMD_MODULE_INCLUDED
-#define HMD_MODULE_INCLUDED 0
-#endif
-
 AHowTo_VehiculeHud::AHowTo_VehiculeHud()
 {
 	static ConstructorHelpers::FObjectFinder<UFont> Font(TEXT("/Engine/EngineFonts/RobotoDistanceField"));
@@ -37,36 +33,6 @@ void AHowTo_VehiculeHud::DrawHUD()
 		TileItem.BlendMode = SE_BLEND_Translucent;
 		Canvas->DrawItem(TileItem);
 	}
-
-	// Calculate ratio from 720p
-	const float HUDXRatio = Canvas->SizeX / 1280.f;
-	const float HUDYRatio = Canvas->SizeY / 720.f;
-
-	bool bWantHUD = true;
-#if HMD_MODULE_INCLUDED
-	bWantHUD = !GEngine->IsStereoscopic3D();
-#endif // HMD_MODULE_INCLUDED
-	// We dont want the onscreen hud when using a HMD device	
-	if (bWantHUD == true)
-	{
-		// Get our vehicle so we can check if we are in car. If we are we don't want onscreen HUD
-		AHowTo_VehiculePawn* Vehicle = Cast<AHowTo_VehiculePawn>(GetOwningPawn());
-		if ((Vehicle != nullptr) && (Vehicle->bInCarCameraActive == false))
-		{
-			FVector2D ScaleVec(HUDYRatio * 1.4f, HUDYRatio * 1.4f);
-
-			// Speed
-			//FCanvasTextItem SpeedTextItem(FVector2D(HUDXRatio * 805.f, HUDYRatio * 455), Vehicle->SpeedDisplayString, HUDFont, FLinearColor::White);
-			//SpeedTextItem.Scale = ScaleVec;
-			//Canvas->DrawItem(SpeedTextItem);
-
-			// Gear
-			//FCanvasTextItem GearTextItem(FVector2D(HUDXRatio * 805.f, HUDYRatio * 500.f), Vehicle->GearDisplayString, HUDFont, Vehicle->bInReverseGear == false ? Vehicle->GearDisplayColor : Vehicle->GearDisplayReverseColor);
-			//GearTextItem.Scale = ScaleVec;
-			//Canvas->DrawItem(GearTextItem);
-		}
-	}
 }
-
 
 #undef LOCTEXT_NAMESPACE
