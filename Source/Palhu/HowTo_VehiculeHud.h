@@ -36,11 +36,18 @@ protected:
 	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
 	FVector2D GearsOffset;
 	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
-	FText SpeedText;
+	FString SpeedText;
 	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
-	FText GearsText;
+	FString GearsText;
+
+	int PlayerMaxHealth;
+	int PlayerCurrentHealth;
+	float PlayerCurrentSpeed;
+	int PlayerCurrentGear;
 
 private:
+	void UpdateValues();
+
 	void DrawCrossHair();
 	void DrawHealthBar();
 	void DrawSpeedInfo();
