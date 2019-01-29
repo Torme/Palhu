@@ -12,13 +12,10 @@ class AHowTo_VehiculeHud : public AHUD
 public:
 	AHowTo_VehiculeHud();
 
-	/** Font used to render the vehicle info */
 	UPROPERTY()
 	UFont* HUDFont;
 
-	// Begin AHUD interface
 	virtual void DrawHUD() override;
-	// End AHUD interface
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
