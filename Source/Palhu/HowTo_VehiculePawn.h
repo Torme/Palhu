@@ -11,7 +11,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UInputComponent;
-class UStaticMeshComponent;
+class USkeletalMeshComponent;
 class UWeaponComponent;
 class UHealthComponent;
 
@@ -28,12 +28,12 @@ public:
 	
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* WeaponsBase;
-	UPROPERTY(Category = Weapon, EditAnywhere)
-	UStaticMeshComponent* WeaponMesh;
-	UPROPERTY(Category = Weapon, EditAnywhere)
+	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	USkeletalMeshComponent* WeaponMesh;
+	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UWeaponComponent* WeaponComponent;
 	
-	UPROPERTY(Category = Health, EditAnywhere)
+	UPROPERTY(Category = Health, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UHealthComponent* HealthComponent;
 	
 	AHowTo_VehiculePawn();
@@ -61,5 +61,8 @@ public:
 	FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
 
 private:
+	void RotateSpringArm();
+	void RotateWeapons();
+
 	FVector2D m_CameraInput;
 };

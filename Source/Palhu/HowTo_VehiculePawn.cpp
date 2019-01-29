@@ -16,6 +16,7 @@
 #include "Materials/Material.h"
 #include "GameFramework/Controller.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
@@ -26,8 +27,7 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	SpringArm->SetRelativeRotation(FRotator(-15.f, 0.f, 0.f));
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->TargetArmLength = 600.0f;
-	SpringArm->bEnableCameraRotationLag = true;
-	SpringArm->CameraRotationLagSpeed = 7.f;
+	SpringArm->bUsePawnControlRotation = false;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritRoll = false;
 
@@ -40,7 +40,7 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 
 	WeaponsBase = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponsBase"));
 	WeaponsBase->SetupAttachment(GetMesh());
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(WeaponsBase);
 
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponsManager"));
@@ -74,8 +74,8 @@ void AHowTo_VehiculePawn::MoveForward(float Val)
 
 void AHowTo_VehiculePawn::Fire()
 {
-	if (WeaponComponent)
-		if (WeaponComponent->SpawnProjectile(GetActorLocation(), GetActorRotation(), this) == nullptr)
+	if (WeaponComponent && WeaponMesh)
+		if (WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this) == nullptr)
 			GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("Fire failure!"));
 }
 
@@ -109,18 +109,35 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	Super::Tick(Delta);
 
 	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
-	if (SpringArm != nullptr)
-	{		
-		FRotator NewRotation = SpringArm->GetComponentRotation();
-		NewRotation.Yaw += m_CameraInput.X;
-		NewRotation.Pitch += m_CameraInput.Y;
-		SpringArm->SetWorldRotation(NewRotation);
-	}
+	RotateSpringArm();
+	RotateWeapons();
 }
 
 void AHowTo_VehiculePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+void AHowTo_VehiculePawn::RotateSpringArm()
+{
+	if (SpringArm == nullptr)
+		return;
+	FRotator NewRotation = SpringArm->GetComponentRotation();
+	NewRotation.Yaw += m_CameraInput.X;
+	NewRotation.Pitch += m_CameraInput.Y;
+	SpringArm->SetWorldRotation(NewRotation);
+}
+
+void AHowTo_VehiculePawn::RotateWeapons()
+{
+	FVector WeaponTargetPosition;
+	FRotator NewWeaponRotation;
+
+	if (Camera == nullptr || WeaponMesh == nullptr)
+		return;
+	WeaponTargetPosition = Camera->GetForwardVector() * 10000.f + Camera->GetComponentLocation();
+	NewWeaponRotation = UKismetMathLibrary::FindLookAtRotation(WeaponMesh->GetComponentLocation(), WeaponTargetPosition);
+	WeaponMesh->SetWorldRotation(NewWeaponRotation);
 }
 #undef LOCTEXT_NAMESPACE
