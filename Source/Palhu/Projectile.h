@@ -12,6 +12,12 @@ UCLASS()
 class PALHU_API AProjectile : public AActor
 {
 	GENERATED_BODY()
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	USphereComponent* CollisionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	UProjectileMovementComponent* ProjectileMovementComponent;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -29,9 +35,6 @@ public:
 	void FireInDirection(const FVector & ShootDirection);
 	virtual void FireInDirection_Implementation(const FVector & ShootDirection);
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
-		USphereComponent* CollisionComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Movement)
-		UProjectileMovementComponent* ProjectileMovementComponent;
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 };
