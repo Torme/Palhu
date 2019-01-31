@@ -12,12 +12,43 @@ class AHowTo_VehiculeHud : public AHUD
 public:
 	AHowTo_VehiculeHud();
 
-	UPROPERTY()
-	UFont* HUDFont;
-
 	virtual void DrawHUD() override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(Category = CrossHair, EditDefaultsOnly)
 	UTexture2D* CrossHairTexture;
+
+	UPROPERTY(Category = HealthBar, EditDefaultsOnly)
+	UTexture2D* HealthBarBackgroundTexture;
+	UPROPERTY(Category = HealthBar, EditDefaultsOnly)
+	UTexture2D* HealthBarForegroundTexture;
+	UPROPERTY(Category = HealthBar, EditDefaultsOnly)
+	FVector2D HealthBarDimention;
+	UPROPERTY(Category = HealthBar, EditDefaultsOnly)
+	FVector2D HealthBarForegroundOffset;
+	UPROPERTY(Category = HealthBar, EditDefaultsOnly)
+	FVector2D HealthBarOffset;
+	
+	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
+	UFont* SpeedInfoFont;
+	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
+	FVector2D SpeedOffset;
+	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
+	FVector2D GearsOffset;
+	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
+	FString SpeedText;
+	UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
+	FString GearsText;
+
+	int PlayerMaxHealth;
+	int PlayerCurrentHealth;
+	float PlayerCurrentSpeed;
+	int PlayerCurrentGear;
+
+private:
+	void UpdateValues();
+
+	void DrawCrossHair();
+	void DrawHealthBar();
+	void DrawSpeedInfo();
 };
