@@ -32,13 +32,13 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-AProjectile * UWeaponComponent::SpawnProjectile(FVector Location, FRotator Rotation, AActor * Owner)
+AProjectile * UWeaponComponent::SpawnProjectile(const FTransform& Transform, AActor * Owner)
 {
 	if (!ProjectileClass || !Owner)
 		return nullptr;
 
-	FVector MuzzleLocation = Location + FTransform(Owner->GetActorRotation()).TransformVector(MuzzleOffset);
-	FRotator MuzzleRotation = Rotation;
+	FVector MuzzleLocation = Transform.GetLocation() + FTransform(Owner->GetActorRotation()).TransformVector(MuzzleOffset);
+	FRotator MuzzleRotation = Transform.GetRotation().Rotator();
 
 	//MuzzleRotation.Pitch += 10.0f;
 	UWorld * World = GetWorld();
