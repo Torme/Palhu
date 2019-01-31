@@ -75,8 +75,7 @@ void AHowTo_VehiculePawn::MoveForward(float Val)
 void AHowTo_VehiculePawn::Fire()
 {
 	if (WeaponComponent && WeaponMesh)
-		if (WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this) == nullptr)
-			GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("Fire failure!"));
+		WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this);
 }
 
 void AHowTo_VehiculePawn::MoveRight(float Val)
@@ -135,6 +134,8 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
 	RotateSpringArm();
 	RotateWeapons();
+	if (HealthComponent->IsAlive() == false)
+		Destroy(this);
 }
 
 void AHowTo_VehiculePawn::BeginPlay()

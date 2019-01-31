@@ -25,8 +25,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, category = Spawner)
-	AProjectile* SpawnProjectile(const FTransform &Transform, AActor* Owner);
+	UFUNCTION(BlueprintCallable, category = Spawner, Server, Reliable, WithValidation)
+	void SpawnProjectile(const FTransform &Transform, AActor* Owner);
+	bool SpawnProjectile_Validate(const FTransform &Transform, AActor* Owner);
+	void SpawnProjectile_Implementation(const FTransform &Transform, AActor* Owner);
 
 	// Gun muzzle's offset from the camera location.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
