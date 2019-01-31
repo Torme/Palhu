@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameplayTimerComponent.h"
+#include "PrintDebug.h"
 
 // Sets default values for this component's properties
 UGameplayTimerComponent::UGameplayTimerComponent()
@@ -11,7 +12,7 @@ UGameplayTimerComponent::UGameplayTimerComponent()
 
 	if (!StartingTimerValue)
 	{
-		StartingTimerValue = 600;
+		StartingTimerValue = 100;
 	}
 }
 
@@ -20,15 +21,18 @@ UGameplayTimerComponent::UGameplayTimerComponent()
 void UGameplayTimerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	TimerValue = StartingTimerValue;
 }
 
+void UGameplayTimerComponent::Start()
+{
+	TimerValue = StartingTimerValue;
+}
 
 // Called every frame
 void UGameplayTimerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	if (TimerValue > 0)
 	{
 		TimerValue -= DeltaTime;

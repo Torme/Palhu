@@ -12,6 +12,9 @@
 #include "CanvasItem.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/Engine.h"
+#include "InGameStateBase.h"
+#include "PrintDebug.h"
+#include "Kismet/GameplayStatics.h"
 
 #define LOCTEXT_NAMESPACE "VehicleHUD"
 
@@ -27,6 +30,7 @@ void AInGameHUD::DrawHUD()
 	DrawCrossHair();
 	DrawHealthBar();
 	DrawSpeedInfo();
+	DrawTimer();
 }
 
 void AInGameHUD::UpdateValues()
@@ -40,6 +44,10 @@ void AInGameHUD::UpdateValues()
 		m_CurrentHealth = Player->GetCurrentHealth();
 		m_CurrentSpeed = Player->GetCurrentSpeed();
 		m_CurrentGear = Player->GetCurrentGear();
+		if (GetGameInstance()->GetWorld() != nullptr)
+		{
+			m_CurrentTimer = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTimer();
+		}
 	}
 }
 
@@ -78,7 +86,7 @@ void AInGameHUD::DrawHealthBar()
 	Canvas->DrawItem(ForegroundTileItem);
 }
 
-void AInGameHUD::DrawSpeedInfo()
+void AInGameHUD::DrawSpeedInfo() 
 {
 	FText SpeedCompleteText;
 	FText GearCompleteText;
@@ -98,6 +106,21 @@ void AInGameHUD::DrawSpeedInfo()
 	GearsTextItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(SpeedTextItem);
 	Canvas->DrawItem(GearsTextItem);
+}
+
+void AInGameHUD::DrawTimer()
+{
+	FText TimerText;
+	FVector2D TimerTextLocation;
+
+	if (TimerFont == nullptr)
+		return;
+	TimerText = FText::FromString(FString::FromInt(m_CurrentTimer));
+	TimerTextLocation= FVector2D(Canvas->ClipX - TimerOffset.X, Canvas->ClipY - TimerOffset.Y);
+	FCanvasTextItem TimerTextItem(TimerTextLocation, TimerText, TimerFont, FLinearColor::White);
+
+	TimerTextItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TimerTextItem);
 }
 
 #undef LOCTEXT_NAMESPACE

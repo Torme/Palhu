@@ -15,12 +15,15 @@ class PALHU_API AGameplayGameMode : public AGameModeBase
 
 public:
 	AGameplayGameMode();
+
+	//int GetTimerValue();
 protected:
 	/** Called when the game starts. */
 	virtual void BeginPlay() override;
 
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 	UPROPERTY(EditAnywhere)
 		UGameplayTimerComponent *TimerComponent;
 };

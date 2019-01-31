@@ -45,14 +45,24 @@ class PALHU_API AInGameHUD : public AHUD
 		UPROPERTY(Category = SpeedInfo, EditDefaultsOnly)
 			FString GearsText;
 
+		UPROPERTY(Category = TimerInfo, EditDefaultsOnly)
+			UFont* TimerFont;
+		UPROPERTY(Category = TimerInfo, EditDefaultsOnly)
+			FVector2D TimerOffset;
+		UPROPERTY(Category = TimerInfo, EditDefaultsOnly)
+			FString TimerText;
+
+
 	private:
 		void UpdateValues();
 		void DrawCrossHair();
 		void DrawHealthBar();
 		void DrawSpeedInfo();
+		void DrawTimer();
 
 		int m_MaxHeath;
 		int m_CurrentHealth;
 		float m_CurrentSpeed;
 		int m_CurrentGear;
+		int m_CurrentTimer;
 	};
