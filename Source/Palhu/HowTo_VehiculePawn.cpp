@@ -149,7 +149,9 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	RotateSpringArm();
 	RotateWeapons();
 	if (HealthComponent->IsAlive() == false)
+	{
 		Destroy(this);
+	}	
 }
 
 void AHowTo_VehiculePawn::BeginPlay()
@@ -193,7 +195,5 @@ bool AHowTo_VehiculePawn::WheelsAreGrounded()
 	}
 	return true;
 }
-
-
 
 #undef LOCTEXT_NAMESPACE

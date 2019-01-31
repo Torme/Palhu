@@ -16,6 +16,7 @@ public:
 
 	void SetTimer(int newTimer);
 	void RestartAllPlayers();
+	void CheckDeadPlayer();
 	int GetTimer();
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;

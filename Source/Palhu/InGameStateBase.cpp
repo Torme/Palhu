@@ -5,6 +5,8 @@
 #include "UnrealNetwork.h"
 #include "GameplayGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "HowTo_VehiculePawn.h"
+#include "HealthComponent.h"
 
 AInGameStateBase::AInGameStateBase()
 {
@@ -36,7 +38,25 @@ void AInGameStateBase::RestartAllPlayers()
 
 	for (i = 0; i < PlayerArray.Num(); i++)
 	{
-		print("RESET PLAYER");
 		Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(UGameplayStatics::GetPlayerController(GetWorld(), i));
 	}
+}
+
+void AInGameStateBase::CheckDeadPlayer()
+{
+	int i;
+	APlayerController* PlayerController;
+
+	for (i = 0; i < PlayerArray.Num(); i++)
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), i);
+		if (PlayerController != nullptr)
+		{
+			if (PlayerController->GetPawn() == nullptr)
+			{
+				Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(PlayerController);
+			}
+		}
+	}
+
 }

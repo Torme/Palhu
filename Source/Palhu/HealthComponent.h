@@ -26,6 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Damage(int Damage);
+	UFUNCTION(BlueprintCallable)
+	void ResetCurrentLife();
 
 	FORCEINLINE bool IsAlive() const { return bIsAlive; }
 	FORCEINLINE int GetMaxHealth() const { return MaxHealPoints; }

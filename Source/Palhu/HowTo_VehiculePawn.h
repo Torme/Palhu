@@ -57,7 +57,7 @@ public:
 	void YawCamera(float val);
 	void Fire();
 	void Jump();
-	   
+
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();
 

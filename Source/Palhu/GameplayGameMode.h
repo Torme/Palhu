@@ -20,7 +20,6 @@ public:
 protected:
 	/** Called when the game starts. */
 	virtual void BeginPlay() override;
-
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;

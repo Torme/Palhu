@@ -44,3 +44,9 @@ void UHealthComponent::Damage(int Damage)
 	else
 		CurrentHealPoints -= Damage;
 }
+
+void UHealthComponent::ResetCurrentLife()
+{
+	CurrentHealPoints = MaxHealPoints;
+	bIsAlive = true;
+}

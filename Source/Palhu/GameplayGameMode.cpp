@@ -36,6 +36,7 @@ void AGameplayGameMode::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	Cast<AInGameStateBase>(GameState)->SetTimer(TimerComponent->GetTimerValue());
+	Cast<AInGameStateBase>(GameState)->CheckDeadPlayer();
 }
 
 //int AGameplayGameMode::GetTimerValue()
