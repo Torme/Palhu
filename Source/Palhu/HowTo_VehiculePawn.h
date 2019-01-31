@@ -41,6 +41,9 @@ public:
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly)
 	bool bInReverseGear;
 
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadOnly)
+	float JumpMultiplier;
+
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	virtual void Tick(float Delta) override;
@@ -53,7 +56,8 @@ public:
 	void PitchCamera(float val);
 	void YawCamera(float val);
 	void Fire();
-
+	void Jump();
+	   
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();
 
@@ -69,6 +73,7 @@ public:
 private:
 	void RotateSpringArm();
 	void RotateWeapons();
+	bool WheelsAreGrounded();
 
 	FVector2D m_CameraInput;
 };
