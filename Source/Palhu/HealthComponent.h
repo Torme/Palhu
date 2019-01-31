@@ -27,7 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Damage(int Damage);
 
-	bool IsAlive() const;
+	FORCEINLINE bool IsAlive() const { return bIsAlive; }
+	FORCEINLINE int GetMaxHealth() const { return MaxHealPoints; }
+	FORCEINLINE int GetCurrentHealth() const { return CurrentHealPoints; }
 
 protected:
 	UPROPERTY(Category = Health, EditAnywhere, BlueprintReadWrite)
