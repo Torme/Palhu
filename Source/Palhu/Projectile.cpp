@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -9,7 +10,7 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	// Add Funtion to Collsion component + make a blueprint event to
+	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 	CollisionComponent->InitSphereRadius(15.0f);
 	RootComponent = CollisionComponent;
 
@@ -18,8 +19,7 @@ AProjectile::AProjectile()
 	ProjectileMovementComponent->InitialSpeed = 3000.0f;
 	ProjectileMovementComponent->MaxSpeed = 3000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
-	ProjectileMovementComponent->bShouldBounce = true;
-	ProjectileMovementComponent->Bounciness = 0.3f;
+	ProjectileMovementComponent->bShouldBounce = false;
 
 	InitialLifeSpan = 3.0f;
 }
@@ -41,5 +41,10 @@ void AProjectile::Tick(float DeltaTime)
 void AProjectile::FireInDirection_Implementation(const FVector & ShootDirection)
 {
 	
+}
+
+void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10,FColor::Red, TEXT("SALUT"));
 }
 

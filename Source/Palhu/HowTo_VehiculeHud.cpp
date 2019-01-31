@@ -33,11 +33,13 @@ void AHowTo_VehiculeHud::UpdateValues()
 	AHowTo_VehiculePawn* Player;
 
 	Player = Cast<AHowTo_VehiculePawn>(GetOwningPawn());
-	check(Player);
-	m_MaxHeath = Player->GetMaxHealth();
-	m_CurrentHealth = Player->GetCurrentHealth();
-	m_CurrentSpeed = Player->GetCurrentSpeed();
-	m_CurrentGear = Player->GetCurrentGear();
+	if (Player != nullptr)
+	{
+		m_MaxHeath = Player->GetMaxHealth();
+		m_CurrentHealth = Player->GetCurrentHealth();
+		m_CurrentSpeed = Player->GetCurrentSpeed();
+		m_CurrentGear = Player->GetCurrentGear();
+	}
 }
 
 void AHowTo_VehiculeHud::DrawCrossHair()
