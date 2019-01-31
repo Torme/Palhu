@@ -39,7 +39,6 @@ void UHUDComponent::BeginPlay()
 void UHUDComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Green, TEXT("TICK"));
 	if (TimerValue > 0)
 	{
 		TimerValue -= DeltaTime;
