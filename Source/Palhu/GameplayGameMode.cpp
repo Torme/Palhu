@@ -1,17 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameplayGameMode.h"
-#include "HUDComponent.h"
+#include "GameplayTimerComponent.h"
+#include "Engine/Engine.h"
 
 AGameplayGameMode::AGameplayGameMode()
 {
-	HUDComponent = CreateDefaultSubobject<UHUDComponent>(TEXT("TimerComponent"));
-	AddOwnedComponent(HUDComponent);
+	TimerComponent = CreateDefaultSubobject<UGameplayTimerComponent>(TEXT("TimerComponent"));
+	AddOwnedComponent(TimerComponent);
 }
 
 void AGameplayGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, "start game");
 }
 
 void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
@@ -20,7 +22,6 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 
 	if (GetNumPlayers() > 1)
 	{
-		HUDComponent->StartGame();
 		StartPlay();
 	}
 }

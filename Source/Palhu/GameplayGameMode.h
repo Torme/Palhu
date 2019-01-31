@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameplayGameMode.generated.h"
 
-class UHUDComponent;
+class UGameplayTimerComponent;
 
 UCLASS()
 class PALHU_API AGameplayGameMode : public AGameModeBase
@@ -22,5 +22,5 @@ protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 	UPROPERTY(EditAnywhere)
-		UHUDComponent *HUDComponent;
+		UGameplayTimerComponent *TimerComponent;
 };

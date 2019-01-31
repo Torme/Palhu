@@ -21,8 +21,7 @@ void UGameplayTimerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	TimerValue = StartingTimerValue;
 }
 
 
@@ -34,11 +33,6 @@ void UGameplayTimerComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	{
 		TimerValue -= DeltaTime;
 	}
-}
-
-void UGameplayTimerComponent::StartGame()
-{
-	TimerValue = StartingTimerValue;
 }
 
 int UGameplayTimerComponent::GetTimerValue()
