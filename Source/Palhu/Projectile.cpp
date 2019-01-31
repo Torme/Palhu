@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
+#include "HowTo_VehiculePawn.h"
+#include "HealthComponent.h"
 #include "Engine/Engine.h"
 
 // Sets default values
@@ -11,6 +13,8 @@ AProjectile::AProjectile()
 
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+	//CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapBegin);
 	CollisionComponent->InitSphereRadius(15.0f);
 	RootComponent = CollisionComponent;
 
@@ -45,6 +49,29 @@ void AProjectile::FireInDirection_Implementation(const FVector & ShootDirection)
 
 void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10,FColor::Red, TEXT("SALUT"));
+	if (OtherActor && OtherActor != GetOwner())
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HIT"));
+	}
+	else if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Hit sois meme"));
+}
+
+void AProjectile::OnOverlapBegin(UPrimitiveComponent * HOverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & Hit)
+{
+	AHowTo_VehiculePawn* OverlapedPawn;
+
+	if (OtherActor && OtherActor != GetOwner())
+	{
+		OverlapedPawn = Cast<AHowTo_VehiculePawn>(OtherActor);
+		if (OverlapedPawn)
+		{
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("OVERLAPPED a vehicle"));
+			OverlapedPawn->GetHealth()->Damage(1);
+			Destroy(this);
+		}
+	}
 }
 

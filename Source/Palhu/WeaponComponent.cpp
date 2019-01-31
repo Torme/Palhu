@@ -32,25 +32,28 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-AProjectile * UWeaponComponent::SpawnProjectile(const FTransform& Transform, AActor * Owner)
+bool UWeaponComponent::SpawnProjectile_Validate(const FTransform & Transform, AActor * Owner)
+{
+	return true;
+}
+
+void UWeaponComponent::SpawnProjectile_Implementation(const FTransform& Transform, AActor * Owner)
 {
 	if (!ProjectileClass || !Owner)
-		return nullptr;
+		return;
 
 	FVector MuzzleLocation = Transform.GetLocation() + FTransform(Owner->GetActorRotation()).TransformVector(MuzzleOffset);
 	FRotator MuzzleRotation = Transform.GetRotation().Rotator();
 
-	//MuzzleRotation.Pitch += 10.0f;
 	UWorld * World = GetWorld();
 	if (!World)
-		return nullptr;
+		return;
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = Owner;
 	SpawnParameters.Instigator = Owner->Instigator;
 	AProjectile* newProjectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParameters);
 	if (!newProjectile)
-		return nullptr;
+		return;
 	newProjectile->FireInDirection(FVector());
-	return newProjectile;
 }
 

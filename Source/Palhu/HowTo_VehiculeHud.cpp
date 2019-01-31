@@ -67,7 +67,7 @@ void AHowTo_VehiculeHud::DrawHealthBar()
 		return;
 	ForegroundPosition = HealthBarOffset + HealthBarForegroundOffset;
 	ForegroundDimention = HealthBarDimention - 2 * HealthBarForegroundOffset;
-	ForegroundDimention.X *= m_MaxHeath == 0 ? 0 : m_CurrentHealth / m_MaxHeath;
+	ForegroundDimention.X *= m_MaxHeath == 0 ? 0 : static_cast<float>(m_CurrentHealth) / static_cast<float>(m_MaxHeath);
 	FCanvasTileItem BackgroundTileItem(HealthBarOffset, HealthBarBackgroundTexture->Resource, HealthBarDimention, FLinearColor::White);
 	FCanvasTileItem ForegroundTileItem(ForegroundPosition, HealthBarForegroundTexture->Resource, ForegroundDimention, FLinearColor::White);
 
