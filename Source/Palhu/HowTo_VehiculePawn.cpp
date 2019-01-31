@@ -17,6 +17,7 @@
 #include "GameFramework/Controller.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine/StaticMesh.h"
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
@@ -37,6 +38,7 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	Camera->FieldOfView = 90.f;
 
 	bInReverseGear = false;
+	JumpMultiplier = 1000.0f;
 
 	WeaponsBase = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponsBase"));
 	WeaponsBase->SetupAttachment(GetMesh());
@@ -65,6 +67,7 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
 	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::Fire);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
 }
 
 void AHowTo_VehiculePawn::MoveForward(float Val)
@@ -76,6 +79,17 @@ void AHowTo_VehiculePawn::Fire()
 {
 	if (WeaponComponent && WeaponMesh)
 		WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this);
+}
+
+void AHowTo_VehiculePawn::Jump()
+{
+	USkeletalMeshComponent* RootMesh = GetMesh();
+
+	if (RootMesh && RootMesh->IsSimulatingPhysics() && WheelsAreGrounded())
+	{
+		
+		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
+	}
 }
 
 void AHowTo_VehiculePawn::MoveRight(float Val)
@@ -165,4 +179,21 @@ void AHowTo_VehiculePawn::RotateWeapons()
 	NewWeaponRotation = UKismetMathLibrary::FindLookAtRotation(WeaponMesh->GetComponentLocation(), WeaponTargetPosition);
 	WeaponMesh->SetWorldRotation(NewWeaponRotation);
 }
+
+bool AHowTo_VehiculePawn::WheelsAreGrounded()
+{
+	UWheeledVehicleMovementComponent* WheelComponent = GetVehicleMovement();
+
+	if (WheelComponent == nullptr)
+		return false;
+	for (size_t i = 0; i < WheelComponent->Wheels.Num(); i++)
+	{
+		if (WheelComponent->Wheels[i]->IsInAir())
+			return false;
+	}
+	return true;
+}
+
+
+
 #undef LOCTEXT_NAMESPACE
