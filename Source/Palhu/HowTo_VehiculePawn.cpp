@@ -104,6 +104,30 @@ void AHowTo_VehiculePawn::OnHandbrakeReleased()
 	GetVehicleMovementComponent()->SetHandbrakeInput(false);
 }
 
+int AHowTo_VehiculePawn::GetMaxHealth() const
+{
+	if (HealthComponent == nullptr)
+		return 0;
+	return HealthComponent->GetMaxHealth();
+}
+
+int AHowTo_VehiculePawn::GetCurrentHealth() const
+{
+	if (HealthComponent == nullptr)
+		return 0;
+	return HealthComponent->GetCurrentHealth();
+}
+
+float AHowTo_VehiculePawn::GetCurrentSpeed() const
+{
+	return 0.0f;
+}
+
+int AHowTo_VehiculePawn::GetCurrentGear() const
+{
+	return GetVehicleMovement()->GetCurrentGear();
+}
+
 void AHowTo_VehiculePawn::Tick(float Delta)
 {
 	Super::Tick(Delta);

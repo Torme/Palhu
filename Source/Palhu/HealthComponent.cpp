@@ -44,9 +44,3 @@ void UHealthComponent::Damage(int Damage)
 	else
 		CurrentHealPoints -= Damage;
 }
-
-bool UHealthComponent::IsAlive() const
-{
-	return bIsAlive;
-}
-

@@ -57,8 +57,14 @@ public:
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();
 
+	int GetMaxHealth() const;
+	int GetCurrentHealth() const;
+	float GetCurrentSpeed() const;
+	int GetCurrentGear() const;
+
 	FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArm; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
+	FORCEINLINE UHealthComponent* GetHealth() const { return HealthComponent; }
 
 private:
 	void RotateSpringArm();
