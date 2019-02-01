@@ -65,7 +65,11 @@ public:
 	void PitchCamera(float val);
 	void YawCamera(float val);
 	void Fire();
+
+	UFUNCTION(Server, Reliable, WithValidation)
 	void Jump();
+	void Jump_Implementation();
+	bool Jump_Validate();
 
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();

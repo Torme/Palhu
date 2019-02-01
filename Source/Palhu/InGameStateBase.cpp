@@ -16,20 +16,24 @@ void	AInGameStateBase::GetLifetimeReplicatedProps(TArray < FLifetimeProperty >& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AInGameStateBase, Timer);
+	DOREPLIFETIME(AInGameStateBase, m_Timer);
 }
 
 void	AInGameStateBase::SetTimer(int newTimer)
 {
 	if (Role == ROLE_Authority)
 	{
-		Timer = newTimer;
+		m_Timer = newTimer;
 	}
 }
 
 int AInGameStateBase::GetTimer()
 {
-	return Timer;
+	return m_Timer;
+}
+
+void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
+{
 }
 
 void AInGameStateBase::RestartAllPlayers()

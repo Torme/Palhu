@@ -91,7 +91,7 @@ void AHowTo_VehiculePawn::Fire()
 		WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this);
 }
 
-void AHowTo_VehiculePawn::Jump()
+void AHowTo_VehiculePawn::Jump_Implementation()
 {
 	USkeletalMeshComponent* RootMesh = GetMesh();
 
@@ -100,6 +100,11 @@ void AHowTo_VehiculePawn::Jump()
 		
 		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
 	}
+}
+
+bool AHowTo_VehiculePawn::Jump_Validate()
+{
+	return true;
 }
 
 void AHowTo_VehiculePawn::MoveRight(float Val)
