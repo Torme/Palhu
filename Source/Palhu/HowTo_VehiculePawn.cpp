@@ -18,8 +18,18 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/StaticMesh.h"
+#include "UnrealNetwork.h"
+
+#include "PrintDebug.h"
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
+
+void AHowTo_VehiculePawn::OnRep_RotChange()
+{
+	if (WeaponMesh == nullptr)
+		return;
+	WeaponMesh->SetWorldRotation(CurrentRotation);
+}
 
 AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 {
@@ -159,6 +169,13 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	}	
 }
 
+void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AHowTo_VehiculePawn, CurrentRotation);
+}
+
 void AHowTo_VehiculePawn::BeginPlay()
 {
 	Super::BeginPlay();
@@ -184,13 +201,25 @@ void AHowTo_VehiculePawn::RotateWeapons()
 		return;
 	WeaponTargetPosition = Camera->GetForwardVector() * 10000.f + Camera->GetComponentLocation();
 	NewWeaponRotation = UKismetMathLibrary::FindLookAtRotation(WeaponMesh->GetComponentLocation(), WeaponTargetPosition);
-	WeaponMesh->SetWorldRotation(NewWeaponRotation);
+	if (IsLocallyControlled())
+		ServerRotateWeapons(NewWeaponRotation);
+}
+
+void AHowTo_VehiculePawn::ServerRotateWeapons_Implementation(FRotator NewRotation)
+{
+	WeaponMesh->SetWorldRotation(NewRotation);
+	CurrentRotation = NewRotation;
+}
+
+bool AHowTo_VehiculePawn::ServerRotateWeapons_Validate(FRotator NewRotation)
+{
+	return true;
 }
 
 bool AHowTo_VehiculePawn::WheelsAreGrounded()
 {
 	UWheeledVehicleMovementComponent* WheelComponent = GetVehicleMovement();
-
+	
 	if (WheelComponent == nullptr)
 		return false;
 	for (size_t i = 0; i < WheelComponent->Wheels.Num(); i++)

@@ -20,7 +20,6 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 {
 	GENERATED_BODY()
 
-public:
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm;
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -35,7 +34,14 @@ public:
 	
 	UPROPERTY(Category = Health, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_RotChange)
+	FRotator CurrentRotation;
+
+	UFUNCTION()
+	void OnRep_RotChange();
 	
+public:
 	AHowTo_VehiculePawn();
 
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly)
@@ -47,6 +53,9 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	virtual void Tick(float Delta) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -77,6 +86,10 @@ public:
 private:
 	void RotateSpringArm();
 	void RotateWeapons();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRotateWeapons(FRotator NewRotation);
+	void ServerRotateWeapons_Implementation(FRotator NewRotation);
+	bool ServerRotateWeapons_Validate(FRotator NewRotation);
 	bool WheelsAreGrounded();
 
 	FVector2D m_CameraInput;
