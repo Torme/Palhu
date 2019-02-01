@@ -24,7 +24,7 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	m_GameState->AddPlayer(NewPlayer);
+	//m_GameState->AddPlayer(NewPlayer);
 	if (GetNumPlayers() > 1)
 	{
 		ResetLevel();
@@ -38,6 +38,7 @@ void AGameplayGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	// Check if m_GameState can SetTimer (Crash UnrealEngine)
 	m_GameState->SetTimer(TimerComponent->GetTimerValue());
 	m_GameState->CheckDeadPlayer();
 }
