@@ -36,6 +36,7 @@ void AInGameHUD::DrawHUD()
 void AInGameHUD::UpdateValues()
 {
 	AHowTo_VehiculePawn* Player;
+	AInGameStateBase* GameState;
 
 	Player = Cast<AHowTo_VehiculePawn>(GetOwningPawn());
 	if (Player != nullptr)
@@ -44,9 +45,13 @@ void AInGameHUD::UpdateValues()
 		m_CurrentHealth = Player->GetCurrentHealth();
 		m_CurrentSpeed = Player->GetCurrentSpeed();
 		m_CurrentGear = Player->GetCurrentGear();
-		if (GetGameInstance()->GetWorld() != nullptr)
+		if (GetWorld() != nullptr)
 		{
-			m_CurrentTimer = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()))->GetTimer();
+			GameState = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+			if (GameState != nullptr)
+			{
+				m_CurrentTimer = GameState->GetTimer();
+			}
 		}
 	}
 }

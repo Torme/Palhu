@@ -25,4 +25,7 @@ protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	UPROPERTY(EditAnywhere)
 		UGameplayTimerComponent *TimerComponent;
+
+private:
+	AInGameStateBase* m_GameState;
 };

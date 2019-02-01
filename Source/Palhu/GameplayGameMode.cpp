@@ -11,6 +11,7 @@ AGameplayGameMode::AGameplayGameMode()
 	AddOwnedComponent(TimerComponent);
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
+	m_GameState = Cast<AInGameStateBase>(GameState);
 }
 
 void AGameplayGameMode::BeginPlay()
@@ -22,12 +23,13 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	m_GameState->AddPlayer(NewPlayer);
 	if (GetNumPlayers() > 1)
 	{
 		ResetLevel();
 		StartPlay();
 		TimerComponent->Start();
-		Cast<AInGameStateBase>(GameState)->RestartAllPlayers();
+		m_GameState->RestartAllPlayers();
 	}
 }
 
@@ -35,8 +37,8 @@ void AGameplayGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	Cast<AInGameStateBase>(GameState)->SetTimer(TimerComponent->GetTimerValue());
-	Cast<AInGameStateBase>(GameState)->CheckDeadPlayer();
+	m_GameState->SetTimer(TimerComponent->GetTimerValue());
+	m_GameState->CheckDeadPlayer();
 }
 
 //int AGameplayGameMode::GetTimerValue()

@@ -14,13 +14,20 @@ class PALHU_API AInGameStateBase : public AGameStateBase
 public:
 	AInGameStateBase();
 
-	void SetTimer(int newTimer);
-	void RestartAllPlayers();
-	void CheckDeadPlayer();
-	int GetTimer();
+	void	SetTimer(int newTimer);
+	void	RestartAllPlayers();
+	void	CheckDeadPlayer();
+	int		GetTimer();
+	void	AddPlayer(APlayerController* NewPlayer);
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;
 	//virtual void BeginPlay() override;
+
+private:
 	UPROPERTY(Replicated)
-	int Timer;
+	int m_Timer;
+
+	//UPROPERTY(Replicated)
+	//	TMap<APlayerController*, int>	m_Scores;
 };
