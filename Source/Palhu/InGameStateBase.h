@@ -28,6 +28,7 @@ private:
 	UPROPERTY(Replicated)
 	int m_Timer;
 
-	//UPROPERTY(Replicated)
-	//	TMap<APlayerController*, int>	m_Scores;
+
+	UPROPERTY(Replicated)
+		TMap<APlayerController*, int>	m_Scores;
 };

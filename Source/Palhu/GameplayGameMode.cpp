@@ -11,12 +11,13 @@ AGameplayGameMode::AGameplayGameMode()
 	AddOwnedComponent(TimerComponent);
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
-	m_GameState = Cast<AInGameStateBase>(GameState);
 }
 
 void AGameplayGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_GameState = Cast<AInGameStateBase>(GameState);
 }
 
 void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)

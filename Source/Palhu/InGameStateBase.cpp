@@ -34,6 +34,7 @@ int AInGameStateBase::GetTimer()
 
 void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
+	//m_Scores.Add(NewPlayer->GetName, 8);
 }
 
 void AInGameStateBase::RestartAllPlayers()
@@ -49,8 +50,11 @@ void AInGameStateBase::RestartAllPlayers()
 void AInGameStateBase::CheckDeadPlayer()
 {
 	int i;
+	//int oldScore;
+	//int aliveCount;
 	APlayerController* PlayerController;
 
+	//aliveCount = 0;
 	for (i = 0; i < PlayerArray.Num(); i++)
 	{
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), i);
@@ -58,9 +62,18 @@ void AInGameStateBase::CheckDeadPlayer()
 		{
 			if (PlayerController->GetPawn() == nullptr)
 			{
-				Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(PlayerController);
+				//oldScore = m_Scores[PlayerController];
+				//if (oldScore > 0)
+				//{
+					//aliveCount++;
+					//m_Scores[PlayerController] = oldScore - 1;
+					Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(PlayerController);
+				//}
 			}
 		}
 	}
+	//if (aliveCount <= 1)
+	//{
+	//}
 
 }

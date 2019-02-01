@@ -7,6 +7,7 @@
 #include "GameplayGameMode.generated.h"
 
 class UGameplayTimerComponent;
+class AInGameStateBase;
 
 UCLASS()
 class PALHU_API AGameplayGameMode : public AGameModeBase
