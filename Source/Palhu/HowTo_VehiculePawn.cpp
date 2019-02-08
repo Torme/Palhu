@@ -24,6 +24,9 @@
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
+float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_PITCH = -5.f;
+float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_LENGTH = 600.f;
+
 void AHowTo_VehiculePawn::OnRep_RotChange()
 {
 	if (WeaponMesh == nullptr)
@@ -35,9 +38,9 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm0"));
 	SpringArm->TargetOffset = FVector(0.f, 0.f, 200.f);
-	SpringArm->SetRelativeRotation(FRotator(-15.f, 0.f, 0.f));
+	SpringArm->SetRelativeRotation(FRotator(SPRING_ARM_DEFAULT_PITCH, 0.f, 0.f));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 600.0f;
+	SpringArm->TargetArmLength = SPRING_ARM_DEFAULT_LENGTH;
 	SpringArm->bUsePawnControlRotation = false;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritRoll = false;
@@ -46,6 +49,9 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	Camera->bUsePawnControlRotation = false;
 	Camera->FieldOfView = 90.f;
+
+	SpringArmMaxPitch = 30.f;
+	SpringArmMinPitch = -30.f;
 
 	bInReverseGear = false;
 	JumpMultiplier = 1000.0f;
@@ -74,10 +80,11 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("CameraPitch", this, &AHowTo_VehiculePawn::PitchCamera);
 	PlayerInputComponent->BindAxis("CameraYaw", this, &AHowTo_VehiculePawn::YawCamera);
 
-	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
-	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::Fire);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
+	PlayerInputComponent->BindAction("ResetCamera", IE_Pressed, this, &AHowTo_VehiculePawn::ResetCamera);
+	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
+	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
 }
 
 void AHowTo_VehiculePawn::MoveForward(float Val)
@@ -120,6 +127,17 @@ void AHowTo_VehiculePawn::PitchCamera(float val)
 void AHowTo_VehiculePawn::YawCamera(float val)
 {
 	m_CameraInput.X = val;
+}
+
+void AHowTo_VehiculePawn::ResetCamera()
+{
+	FRotator NewRotation;
+	
+	if (SpringArm == nullptr)
+		return;
+	NewRotation = RootComponent->GetComponentRotation();
+	NewRotation.Pitch -= SPRING_ARM_DEFAULT_PITCH;
+	SpringArm->SetWorldRotation(NewRotation);
 }
 
 void AHowTo_VehiculePawn::OnHandbrakePressed()
@@ -184,11 +202,18 @@ void AHowTo_VehiculePawn::BeginPlay()
 
 void AHowTo_VehiculePawn::RotateSpringArm()
 {
+	FRotator NewRotation;
+
 	if (SpringArm == nullptr)
 		return;
-	FRotator NewRotation = SpringArm->GetComponentRotation();
+	NewRotation = SpringArm->GetComponentRotation();
 	NewRotation.Yaw += m_CameraInput.X;
 	NewRotation.Pitch += m_CameraInput.Y;
+	NewRotation.Roll = 0;
+	if (NewRotation.Pitch > SpringArmMaxPitch)
+		NewRotation.Pitch = SpringArmMaxPitch;
+	else if (NewRotation.Pitch < SpringArmMinPitch)
+		NewRotation.Pitch = SpringArmMinPitch;
 	SpringArm->SetWorldRotation(NewRotation);
 }
 

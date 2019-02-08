@@ -24,6 +24,10 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 	USpringArmComponent* SpringArm;
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* Camera;
+	UPROPERTY(Category = Camera, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float SpringArmMaxPitch;
+	UPROPERTY(Category = Camera, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float SpringArmMinPitch;
 	
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* WeaponsBase;
@@ -64,6 +68,7 @@ public:
 	void MoveRight(float Val);
 	void PitchCamera(float val);
 	void YawCamera(float val);
+	void ResetCamera();
 	void Fire();
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -84,6 +89,9 @@ public:
 	FORCEINLINE UHealthComponent* GetHealth() const { return HealthComponent; }
 
 private:
+	static float SPRING_ARM_DEFAULT_PITCH;
+	static float SPRING_ARM_DEFAULT_LENGTH;
+
 	void RotateSpringArm();
 	void RotateWeapons();
 	UFUNCTION(Server, Reliable, WithValidation)
