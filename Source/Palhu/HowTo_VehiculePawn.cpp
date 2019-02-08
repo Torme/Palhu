@@ -249,10 +249,10 @@ bool AHowTo_VehiculePawn::WheelsAreGrounded()
 		return false;
 	for (size_t i = 0; i < WheelComponent->Wheels.Num(); i++)
 	{
-		if (WheelComponent->Wheels[i]->IsInAir())
-			return false;
+		if (WheelComponent->Wheels[i]->IsInAir() == false)
+			return true;
 	}
-	return true;
+	return false;
 }
 
 #undef LOCTEXT_NAMESPACE
