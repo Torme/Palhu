@@ -15,6 +15,7 @@
 #include "InGameStateBase.h"
 #include "PrintDebug.h"
 #include "Kismet/GameplayStatics.h"
+#include "InGamePlayerController.h"
 
 #define LOCTEXT_NAMESPACE "VehicleHUD"
 
@@ -31,6 +32,7 @@ void AInGameHUD::DrawHUD()
 	DrawHealthBar();
 	DrawSpeedInfo();
 	DrawTimer();
+	DrawTeamScore();
 }
 
 void AInGameHUD::UpdateValues()
@@ -51,6 +53,7 @@ void AInGameHUD::UpdateValues()
 			if (GameState != nullptr)
 			{
 				m_CurrentTimer = GameState->GetTimer();
+				m_CurrentScores = GameState->GetCurrentScores();
 			}
 		}
 	}
@@ -126,6 +129,25 @@ void AInGameHUD::DrawTimer()
 
 	TimerTextItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TimerTextItem);
+}
+
+void AInGameHUD::DrawTeamScore()
+{
+	FText ScoreText;
+	FVector2D ScoreLocation;
+	AInGamePlayerController* PlayerController = Cast<AInGamePlayerController>(GetOwningPlayerController());
+
+	if (ScoreFont == nullptr)
+		return;
+	//printf("team: %d", PlayerController->GetTeamIndex());
+	for (int i = 0; i < m_CurrentScores.Num(); i++)
+	{
+		ScoreText = FText::FromString(FString::FromInt(m_CurrentScores[i]));
+		ScoreLocation = FVector2D(Canvas->ClipX - ScoreOffset.X, Canvas->ClipY - ScoreOffset.Y + (20 * i));
+		FCanvasTextItem ScoreTextItem(ScoreLocation, ScoreText, ScoreFont, PlayerController->GetTeamIndex() == i ? FLinearColor::Red : FLinearColor::White);
+		ScoreTextItem.BlendMode = SE_BLEND_Translucent;
+		Canvas->DrawItem(ScoreTextItem);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

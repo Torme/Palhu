@@ -29,4 +29,5 @@ protected:
 
 private:
 	AInGameStateBase* m_GameState;
+	bool	m_GameStarted;
 };
