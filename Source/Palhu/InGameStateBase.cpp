@@ -7,9 +7,19 @@
 #include "Kismet/GameplayStatics.h"
 #include "HowTo_VehiculePawn.h"
 #include "HealthComponent.h"
+#include "InGamePlayerController.h"
 
 AInGameStateBase::AInGameStateBase()
 {
+	FTeam TeamA;
+	FTeam TeamB;
+
+	TeamA.Name = "A";
+	TeamA.Score = 2;
+	TeamB.Name = "B";
+	TeamB.Score = 2;
+	m_Teams.Add(TeamA);
+	m_Teams.Add(TeamB);
 }
 
 void	AInGameStateBase::GetLifetimeReplicatedProps(TArray < FLifetimeProperty >& OutLifetimeProps) const
@@ -17,6 +27,7 @@ void	AInGameStateBase::GetLifetimeReplicatedProps(TArray < FLifetimeProperty >& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AInGameStateBase, m_Timer);
+	DOREPLIFETIME(AInGameStateBase, m_Teams);
 }
 
 void	AInGameStateBase::SetTimer(int newTimer)
@@ -25,7 +36,6 @@ void	AInGameStateBase::SetTimer(int newTimer)
 	{
 		m_Timer = newTimer;
 	}
-	m_Scores.Add(8);
 }
 
 int AInGameStateBase::GetTimer()
@@ -33,9 +43,28 @@ int AInGameStateBase::GetTimer()
 	return m_Timer;
 }
 
+TArray<int> AInGameStateBase::GetCurrentScores()
+{
+	TArray<int> CurrentScores;
+
+	for (int i = 0; i < m_Teams.Num(); i++)
+	{
+		CurrentScores.Add(m_Teams[i].Score);
+	}
+	return CurrentScores;
+}
+
 void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
-	m_Scores.Add(8);
+	int teamIndex = 0;
+	for (int i = 0; i < m_Teams.Num(); i++)
+	{
+		if (m_Teams[i].Players.Num() < m_Teams[teamIndex].Players.Num()) {
+			teamIndex = i;
+		}
+	}
+	m_Teams[teamIndex].Players.Add(NewPlayer);
+	Cast<AInGamePlayerController>(NewPlayer)->SetTeamIndex(teamIndex);
 }
 
 void AInGameStateBase::RestartAllPlayers()
@@ -51,7 +80,7 @@ void AInGameStateBase::RestartAllPlayers()
 void AInGameStateBase::CheckDeadPlayer()
 {
 	int i;
-	//int oldScore;
+	int oldScore;
 	int aliveCount;
 	APlayerController* PlayerController;
 
@@ -63,20 +92,23 @@ void AInGameStateBase::CheckDeadPlayer()
 		{
 			if (PlayerController->GetPawn() == nullptr)
 			{
-				print("end!!!!!!!");
-				/*oldScore = m_Scores[PlayerController->GetUniqueID()];
+				oldScore = m_Teams[Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex()].Score;
 				if (oldScore > 0)
 				{
 					aliveCount++;
-					m_Scores[PlayerController->GetUniqueID()] = oldScore - 1;
+					m_Teams[Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex()].Score = oldScore - 1;
 					Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(PlayerController);
-				}*/
+				}
+			}
+			else
+			{
+				aliveCount++;
 			}
 		}
 	}
 	if (aliveCount <= 1)
 	{
-		/*print("end!!!!!!!");*/
+		print("end :)");
 	}
 
 }

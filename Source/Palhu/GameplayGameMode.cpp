@@ -11,6 +11,7 @@ AGameplayGameMode::AGameplayGameMode()
 	AddOwnedComponent(TimerComponent);
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
+	m_GameStarted = false;
 }
 
 void AGameplayGameMode::BeginPlay()
@@ -18,7 +19,6 @@ void AGameplayGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	m_GameState = Cast<AInGameStateBase>(GameState);
-	//StartPlay();
 }
 
 void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
@@ -33,6 +33,7 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 		ResetLevel();
 		TimerComponent->Start();
 		m_GameState->RestartAllPlayers();
+		m_GameStarted = true;
 	}
 }
 
@@ -40,9 +41,11 @@ void AGameplayGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Check if m_GameState can SetTimer (Crash UnrealEngine)
-	m_GameState->SetTimer(TimerComponent->GetTimerValue());
-	m_GameState->CheckDeadPlayer();
+	if (m_GameStarted)
+	{
+		m_GameState->SetTimer(TimerComponent->GetTimerValue());
+		m_GameState->CheckDeadPlayer();
+	}
 }
 
 //int AGameplayGameMode::GetTimerValue()
