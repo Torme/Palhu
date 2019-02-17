@@ -37,12 +37,6 @@ void AHowTo_VehiculePawn::OnRep_WeaponRotChange()
 	WeaponMesh->SetWorldRotation(NewRotation);
 }
 
-void AHowTo_VehiculePawn::OnRep_RootMeshRotChange()
-{
-	check(Cast<USkeletalMeshComponent>(RootComponent));
-	Cast<USkeletalMeshComponent>(RootComponent)->SetWorldRotation(RootMeshCurrentRotation);
-}
-
 AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm0"));
@@ -111,21 +105,21 @@ void AHowTo_VehiculePawn::Fire()
 		WeaponComponent->SpawnProjectile(RelativTransform, this);
 }
 
-void AHowTo_VehiculePawn::Jump_Implementation()
-{
-	USkeletalMeshComponent* RootMesh = GetMesh();
-
-	if (RootMesh && RootMesh->IsSimulatingPhysics() && WheelsAreGrounded())
-	{
-		
-		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
-	}
-}
-
-bool AHowTo_VehiculePawn::Jump_Validate()
-{
-	return true;
-}
+//void AHowTo_VehiculePawn::Jump_Implementation()
+//{
+//	USkeletalMeshComponent* RootMesh = GetMesh();
+//
+//	if (RootMesh && RootMesh->IsSimulatingPhysics() && WheelsAreGrounded())
+//	{
+//		
+//		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
+//	}
+//}
+//
+//bool AHowTo_VehiculePawn::Jump_Validate()
+//{
+//	return true;
+//}
 
 void AHowTo_VehiculePawn::MoveRight(float Val)
 {
@@ -192,8 +186,11 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	Super::Tick(Delta);
 
 	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
-	RotateSpringArm();
-	RotateWeapons();
+	if (IsLocallyControlled())
+	{
+		RotateSpringArm();
+		RotateWeapons();
+	}
 	if (HealthComponent->IsAlive() == false)
 	{
 		Destroy(this);

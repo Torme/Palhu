@@ -41,13 +41,10 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FRotator WeaponCurrentRotation;
-	UPROPERTY(Transient, ReplicatedUsing = OnRep_RootMeshRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FRotator RootMeshCurrentRotation;
 
 	UFUNCTION()
 	void OnRep_WeaponRotChange();
-	UFUNCTION()
-	void OnRep_RootMeshRotChange();
+
 	
 public:
 	AHowTo_VehiculePawn();
@@ -75,10 +72,10 @@ public:
 	void ResetCamera();
 	void Fire();
 
-	UFUNCTION(Server, Reliable, WithValidation)
+	/*UFUNCTION(Server, Reliable, WithValidation)
 	void Jump();
 	void Jump_Implementation();
-	bool Jump_Validate();
+	bool Jump_Validate();*/
 
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();
@@ -98,10 +95,12 @@ private:
 
 	void RotateSpringArm();
 	void RotateWeapons();
+	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerRotateWeapons(FRotator NewRotation);
 	void ServerRotateWeapons_Implementation(FRotator NewRotation);
 	bool ServerRotateWeapons_Validate(FRotator NewRotation);
+		
 	bool WheelsAreGrounded();
 
 	FVector2D m_CameraInput;
