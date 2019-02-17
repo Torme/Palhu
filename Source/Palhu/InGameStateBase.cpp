@@ -35,7 +35,6 @@ int AInGameStateBase::GetTimer()
 
 void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
-	print("add player");
 	m_Scores.Add(8);
 }
 

@@ -18,15 +18,15 @@ void AGameplayGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	m_GameState = Cast<AInGameStateBase>(GameState);
-	StartPlay();
+	//StartPlay();
 }
 
 void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	// if game is not started
-	// StartPlay()
+	if (GetNumPlayers() == 1)
+		StartPlay();
 	m_GameState->AddPlayer(NewPlayer);
 	if (GetNumPlayers() > 1)
 	{

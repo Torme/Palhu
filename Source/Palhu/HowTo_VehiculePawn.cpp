@@ -27,11 +27,20 @@
 float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_PITCH = -5.f;
 float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_LENGTH = 600.f;
 
-void AHowTo_VehiculePawn::OnRep_RotChange()
+void AHowTo_VehiculePawn::OnRep_WeaponRotChange()
 {
+	FRotator NewRotation;
+	
 	if (WeaponMesh == nullptr)
 		return;
-	WeaponMesh->SetWorldRotation(CurrentRotation);
+	NewRotation.Yaw = WeaponCurrentRotation.Yaw;
+	WeaponMesh->SetWorldRotation(NewRotation);
+}
+
+void AHowTo_VehiculePawn::OnRep_RootMeshRotChange()
+{
+	check(Cast<USkeletalMeshComponent>(RootComponent));
+	Cast<USkeletalMeshComponent>(RootComponent)->SetWorldRotation(RootMeshCurrentRotation);
 }
 
 AHowTo_VehiculePawn::AHowTo_VehiculePawn()
@@ -94,8 +103,12 @@ void AHowTo_VehiculePawn::MoveForward(float Val)
 
 void AHowTo_VehiculePawn::Fire()
 {
+	FTransform RelativTransform;
+
+	RelativTransform = WeaponMesh->GetComponentTransform();
+	RelativTransform.SetRotation(WeaponCurrentRotation.Quaternion());
 	if (WeaponComponent && WeaponMesh)
-		WeaponComponent->SpawnProjectile(WeaponMesh->GetComponentTransform(), this);
+		WeaponComponent->SpawnProjectile(RelativTransform, this);
 }
 
 void AHowTo_VehiculePawn::Jump_Implementation()
@@ -184,14 +197,14 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	if (HealthComponent->IsAlive() == false)
 	{
 		Destroy(this);
-	}	
+	}
 }
 
 void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AHowTo_VehiculePawn, CurrentRotation);
+	DOREPLIFETIME(AHowTo_VehiculePawn, WeaponCurrentRotation);
 }
 
 void AHowTo_VehiculePawn::BeginPlay()
@@ -232,8 +245,11 @@ void AHowTo_VehiculePawn::RotateWeapons()
 
 void AHowTo_VehiculePawn::ServerRotateWeapons_Implementation(FRotator NewRotation)
 {
-	WeaponMesh->SetWorldRotation(NewRotation);
-	CurrentRotation = NewRotation;
+	FRotator CalculatedRotation;
+
+	CalculatedRotation.Yaw = NewRotation.Yaw;
+	WeaponMesh->SetWorldRotation(CalculatedRotation);
+	WeaponCurrentRotation = NewRotation;
 }
 
 bool AHowTo_VehiculePawn::ServerRotateWeapons_Validate(FRotator NewRotation)

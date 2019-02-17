@@ -39,11 +39,15 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 	UPROPERTY(Category = Health, VisibleDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UHealthComponent* HealthComponent;
 
-	UPROPERTY(Transient, ReplicatedUsing = OnRep_RotChange)
-	FRotator CurrentRotation;
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FRotator WeaponCurrentRotation;
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_RootMeshRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FRotator RootMeshCurrentRotation;
 
 	UFUNCTION()
-	void OnRep_RotChange();
+	void OnRep_WeaponRotChange();
+	UFUNCTION()
+	void OnRep_RootMeshRotChange();
 	
 public:
 	AHowTo_VehiculePawn();
