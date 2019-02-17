@@ -10,6 +10,12 @@ UCLASS()
 class PALHU_API AInGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(Replicated)
+	int m_Timer;
+
+	//UPROPERTY(BlueprintReadOnly, Category = Test)
+	TArray<uint32>	m_Scores;
 
 public:
 	AInGameStateBase();
@@ -25,10 +31,4 @@ protected:
 	//virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(Replicated)
-	int m_Timer;
-
-
-	UPROPERTY(Replicated)
-		TMap<APlayerController*, int>	m_Scores;
 };

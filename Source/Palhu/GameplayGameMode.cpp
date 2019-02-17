@@ -18,17 +18,19 @@ void AGameplayGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	m_GameState = Cast<AInGameStateBase>(GameState);
+	StartPlay();
 }
 
 void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	//m_GameState->AddPlayer(NewPlayer);
+	// if game is not started
+	// StartPlay()
+	m_GameState->AddPlayer(NewPlayer);
 	if (GetNumPlayers() > 1)
 	{
 		ResetLevel();
-		StartPlay();
 		TimerComponent->Start();
 		m_GameState->RestartAllPlayers();
 	}

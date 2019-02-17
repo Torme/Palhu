@@ -25,6 +25,7 @@ void	AInGameStateBase::SetTimer(int newTimer)
 	{
 		m_Timer = newTimer;
 	}
+	m_Scores.Add(8);
 }
 
 int AInGameStateBase::GetTimer()
@@ -34,7 +35,8 @@ int AInGameStateBase::GetTimer()
 
 void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
-	//m_Scores.Add(NewPlayer->GetName, 8);
+	print("add player");
+	m_Scores.Add(8);
 }
 
 void AInGameStateBase::RestartAllPlayers()
@@ -51,10 +53,10 @@ void AInGameStateBase::CheckDeadPlayer()
 {
 	int i;
 	//int oldScore;
-	//int aliveCount;
+	int aliveCount;
 	APlayerController* PlayerController;
 
-	//aliveCount = 0;
+	aliveCount = 0;
 	for (i = 0; i < PlayerArray.Num(); i++)
 	{
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), i);
@@ -62,18 +64,20 @@ void AInGameStateBase::CheckDeadPlayer()
 		{
 			if (PlayerController->GetPawn() == nullptr)
 			{
-				//oldScore = m_Scores[PlayerController];
-				//if (oldScore > 0)
-				//{
-					//aliveCount++;
-					//m_Scores[PlayerController] = oldScore - 1;
+				print("end!!!!!!!");
+				/*oldScore = m_Scores[PlayerController->GetUniqueID()];
+				if (oldScore > 0)
+				{
+					aliveCount++;
+					m_Scores[PlayerController->GetUniqueID()] = oldScore - 1;
 					Cast<AGameplayGameMode>(AuthorityGameMode)->RestartPlayer(PlayerController);
-				//}
+				}*/
 			}
 		}
 	}
-	//if (aliveCount <= 1)
-	//{
-	//}
+	if (aliveCount <= 1)
+	{
+		/*print("end!!!!!!!");*/
+	}
 
 }
