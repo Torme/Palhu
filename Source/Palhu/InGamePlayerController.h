@@ -16,4 +16,15 @@ class PALHU_API AInGamePlayerController : public APlayerController
 
 public:
 	AInGamePlayerController();
+
+	int GetTeamIndex();
+
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+	void SetTeamIndex(int newTeamIndex);
+	void SetTeamIndex_Implementation(int newTeamIndex);
+	bool SetTeamIndex_Validate(int newTeamIndex);
+
+private:
+
+	int m_TeamIndex;
 };

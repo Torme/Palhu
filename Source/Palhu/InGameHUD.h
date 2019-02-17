@@ -52,6 +52,12 @@ class PALHU_API AInGameHUD : public AHUD
 		UPROPERTY(Category = TimerInfo, EditDefaultsOnly)
 			FString TimerText;
 
+		UPROPERTY(Category = ScoreInfo, EditDefaultsOnly)
+			UFont* ScoreFont;
+		UPROPERTY(Category = ScoreInfo, EditDefaultsOnly)
+			FVector2D ScoreOffset;
+		UPROPERTY(Category = ScoreInfo, EditDefaultsOnly)
+			FString ScoreText;
 
 	private:
 		void UpdateValues();
@@ -59,10 +65,12 @@ class PALHU_API AInGameHUD : public AHUD
 		void DrawHealthBar();
 		void DrawSpeedInfo();
 		void DrawTimer();
+		void DrawTeamScore();
 
 		int m_MaxHeath;
 		int m_CurrentHealth;
 		float m_CurrentSpeed;
 		int m_CurrentGear;
 		int m_CurrentTimer;
+		TArray<int> m_CurrentScores;
 	};

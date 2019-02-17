@@ -6,6 +6,17 @@
 #include "GameFramework/GameStateBase.h"
 #include "InGameStateBase.generated.h"
 
+USTRUCT()
+struct FTeam
+{
+	GENERATED_BODY()
+
+	TArray<APlayerController* > Players;
+
+	uint32 Score;
+	FString Name;
+};
+
 UCLASS()
 class PALHU_API AInGameStateBase : public AGameStateBase
 {
@@ -15,7 +26,8 @@ class PALHU_API AInGameStateBase : public AGameStateBase
 	int m_Timer;
 
 	//UPROPERTY(BlueprintReadOnly, Category = Test)
-	TArray<uint32>	m_Scores;
+	UPROPERTY(Replicated)
+	TArray<FTeam>	m_Teams;
 
 public:
 	AInGameStateBase();
@@ -24,6 +36,7 @@ public:
 	void	RestartAllPlayers();
 	void	CheckDeadPlayer();
 	int		GetTimer();
+	TArray<int>		GetCurrentScores();
 	void	AddPlayer(APlayerController* NewPlayer);
 
 protected:
