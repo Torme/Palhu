@@ -31,8 +31,8 @@ void AInGameHUD::DrawHUD()
 	DrawCrossHair();
 	DrawHealthBar();
 	DrawSpeedInfo();
-	DrawTimer();
-	DrawTeamScore();
+	//DrawTimer();
+	//DrawTeamScore();
 }
 
 void AInGameHUD::UpdateValues()

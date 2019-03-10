@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "InGamePlayerController.generated.h"
 
 /**
@@ -17,15 +18,21 @@ class PALHU_API AInGamePlayerController : public APlayerController
 public:
 	AInGamePlayerController();
 
+	void SetTeamIndex(int newTeamIndex);
 	int GetTeamIndex();
 
-	void SetTeamIndex(int newTeamIndex);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+		TSubclassOf<class UUserWidget> wGameHUD;
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;
+	virtual void BeginPlay() override;
+	virtual void PlayerTick(float DeltaTime) override;
 
 private:
-
 	UPROPERTY(Replicated)
 	int m_TeamIndex;
+
+	UUserWidget* m_GameHUD;
+	bool m_Started;
 };

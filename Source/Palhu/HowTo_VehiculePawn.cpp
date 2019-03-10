@@ -79,7 +79,6 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
-
 	PlayerInputComponent->BindAxis("MoveForward", this, &AHowTo_VehiculePawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHowTo_VehiculePawn::MoveRight);
 	PlayerInputComponent->BindAxis("CameraPitch", this, &AHowTo_VehiculePawn::PitchCamera);
@@ -198,17 +197,6 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 		Destroy(this);
 	}
 }
-
-//void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
-//{
-//	m_TeamIndex = newTeamIndex;
-//}
-//
-//int AHowTo_VehiculePawn::GetTeamIndex()
-//{
-//	//printf("Get team: %d", m_TeamIndex);
-//	return m_TeamIndex;
-//}
 
 void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
