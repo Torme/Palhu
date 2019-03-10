@@ -42,7 +42,7 @@ void UWeaponComponent::SpawnProjectile_Implementation(const FTransform& Transfor
 	if (!ProjectileClass || !Owner)
 		return;
 
-	FVector MuzzleLocation = Transform.GetLocation() + FTransform(Owner->GetActorRotation()).TransformVector(MuzzleOffset);
+	FVector MuzzleLocation = Transform.GetLocation() + FTransform(Transform.GetRotation()).TransformVector(MuzzleOffset);
 	FRotator MuzzleRotation = Transform.GetRotation().Rotator();
 
 	UWorld * World = GetWorld();
