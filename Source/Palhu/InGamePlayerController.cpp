@@ -55,7 +55,7 @@ void AInGamePlayerController::PlayerTick(float DeltaTime)
 	if (m_Started)
 	{
 		GamePlayHUD = Cast<UGameplayHUD>(m_GameHUD);
-		if (false == nullptr)
+		if (GamePlayHUD != nullptr && GetWorld())
 		{
 			GamePlayHUD->SetTimerText(GetWorld()->GetGameState<AInGameStateBase>()->GetTimer());
 			CurrentScores = GetWorld()->GetGameState<AInGameStateBase>()->GetCurrentScores();
