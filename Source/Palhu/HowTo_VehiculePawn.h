@@ -55,6 +55,9 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadOnly)
 	float JumpMultiplier;
 
+	UPROPERTY(Category = Debug, EditAnywhere, BlueprintReadOnly)
+		FVector WeaponTargetPos;
+
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	virtual void Tick(float Delta) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -93,8 +96,7 @@ public:
 private:
 	static float SPRING_ARM_DEFAULT_PITCH;
 	static float SPRING_ARM_DEFAULT_LENGTH;
-	static float INNACTIVE_CAMERA_COOLDOWN;
-	static float MIN_SPEED_TO_INNACTIVE_CAMERA;
+	static float CAMERA_RESET_COMPLETE_TIME;
 
 	void RotateSpringArm();
 	void RotateWeapons();
@@ -105,14 +107,11 @@ private:
 	bool ServerRotateWeapons_Validate(FRotator NewRotation);
 		
 	bool WheelsAreGrounded();
+	void ResetSpringArmPosition(float Delta);
 
 	FVector2D m_CameraInput;
-	FRotator m_TargetRotation;
-	bool m_IsResetingCamera;
-	FTimerHandle m_InnactiveCameraTimer;
-
-	void StartTimer_InnactiveCamera();
-	void StopTimer_InnactiveCamera();
-	void TimerHandle_InnactiveCameraEnd();
+	FRotator m_BeginRotation;
+	bool m_bIsResetingCamera;
+	float m_CurrentCameraResetAlpha;
 	int m_TeamIndex;
 };
