@@ -62,8 +62,8 @@ public:
 	virtual void Tick(float Delta) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void SetTeamIndex (int newTeamIndex);
-	int	GetTeamIndex();
+	//void SetTeamIndex (int newTeamIndex);
+	//int	GetTeamIndex();
 
 protected:
 	virtual void BeginPlay() override;
@@ -113,5 +113,5 @@ private:
 	FRotator m_BeginRotation;
 	bool m_bIsResetingCamera;
 	float m_CurrentCameraResetAlpha;
-	int m_TeamIndex;
+
 };

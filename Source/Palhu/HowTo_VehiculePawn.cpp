@@ -73,7 +73,6 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	AddOwnedComponent(HealthComponent);
 
-	m_TeamIndex = 42;
 	m_bIsResetingCamera = false;
 }
 
@@ -83,7 +82,6 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
-
 	PlayerInputComponent->BindAxis("MoveForward", this, &AHowTo_VehiculePawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHowTo_VehiculePawn::MoveRight);
 	PlayerInputComponent->BindAxis("CameraPitch", this, &AHowTo_VehiculePawn::PitchCamera);
@@ -217,17 +215,6 @@ float AHowTo_VehiculePawn::GetCurrentSpeed() const
 int AHowTo_VehiculePawn::GetCurrentGear() const
 {
 	return GetVehicleMovement()->GetCurrentGear();
-}
-
-void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
-{
-	m_TeamIndex = newTeamIndex;
-}
-
-int AHowTo_VehiculePawn::GetTeamIndex()
-{
-	//printf("Get team: %d", m_TeamIndex);
-	return m_TeamIndex;
 }
 
 void AHowTo_VehiculePawn::RotateSpringArm()
