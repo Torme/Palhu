@@ -18,6 +18,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/Public/TimerManager.h"
 #include "UnrealNetwork.h"
 
 #include "PrintDebug.h"
@@ -26,6 +27,8 @@
 
 float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_PITCH = -5.f;
 float AHowTo_VehiculePawn::SPRING_ARM_DEFAULT_LENGTH = 600.f;
+float AHowTo_VehiculePawn::INNACTIVE_CAMERA_COOLDOWN = 2.f;
+float AHowTo_VehiculePawn::MIN_SPEED_TO_INNACTIVE_CAMERA = 5.f;
 
 void AHowTo_VehiculePawn::OnRep_WeaponRotChange()
 {
@@ -84,10 +87,47 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("CameraYaw", this, &AHowTo_VehiculePawn::YawCamera);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::Fire);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
 	PlayerInputComponent->BindAction("ResetCamera", IE_Pressed, this, &AHowTo_VehiculePawn::ResetCamera);
 	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
 	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
+}
+
+void AHowTo_VehiculePawn::Tick(float Delta)
+{
+	Super::Tick(Delta);
+
+	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
+	if (IsLocallyControlled())
+	{
+		RotateSpringArm();
+		if (m_CameraInput == FVector2D::ZeroVector)
+		{
+			if (m_IsResetingCamera)
+			{
+				Camera->SetWorldRotation(FMath::Lerp(Camera->GetComponentRotation(), m_TargetRotation, 0.1f));
+			}
+		}
+		else
+			RotateWeapons();
+	}
+	if (HealthComponent->IsAlive() == false)
+	{
+		Destroy(this);
+	}
+}
+
+void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AHowTo_VehiculePawn, WeaponCurrentRotation);
+}
+
+void AHowTo_VehiculePawn::BeginPlay()
+{
+	Super::BeginPlay();
+
 }
 
 void AHowTo_VehiculePawn::MoveForward(float Val)
@@ -138,13 +178,12 @@ void AHowTo_VehiculePawn::YawCamera(float val)
 
 void AHowTo_VehiculePawn::ResetCamera()
 {
-	FRotator NewRotation;
-	
 	if (SpringArm == nullptr)
 		return;
-	NewRotation = RootComponent->GetComponentRotation();
-	NewRotation.Pitch -= SPRING_ARM_DEFAULT_PITCH;
-	SpringArm->SetWorldRotation(NewRotation);
+	m_TargetRotation = RootComponent->GetComponentRotation();
+	m_TargetRotation.Pitch -= SPRING_ARM_DEFAULT_PITCH;
+	m_IsResetingCamera = true;
+	StartTimer_InnactiveCamera();
 }
 
 void AHowTo_VehiculePawn::OnHandbrakePressed()
@@ -173,41 +212,14 @@ int AHowTo_VehiculePawn::GetCurrentHealth() const
 
 float AHowTo_VehiculePawn::GetCurrentSpeed() const
 {
-	return 0.0f;
+	if (GetVehicleMovementComponent() == nullptr)
+		return 0.0f;
+	return GetVehicleMovementComponent()->GetForwardSpeed();
 }
 
 int AHowTo_VehiculePawn::GetCurrentGear() const
 {
 	return GetVehicleMovement()->GetCurrentGear();
-}
-
-void AHowTo_VehiculePawn::Tick(float Delta)
-{
-	Super::Tick(Delta);
-
-	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
-	if (IsLocallyControlled())
-	{
-		RotateSpringArm();
-		RotateWeapons();
-	}
-	if (HealthComponent->IsAlive() == false)
-	{
-		Destroy(this);
-	}
-}
-
-void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AHowTo_VehiculePawn, WeaponCurrentRotation);
-}
-
-void AHowTo_VehiculePawn::BeginPlay()
-{
-	Super::BeginPlay();
-
 }
 
 void AHowTo_VehiculePawn::RotateSpringArm()
@@ -229,12 +241,17 @@ void AHowTo_VehiculePawn::RotateSpringArm()
 
 void AHowTo_VehiculePawn::RotateWeapons()
 {
+	FHitResult CameraForwardingHit;
 	FVector WeaponTargetPosition;
 	FRotator NewWeaponRotation;
 
 	if (Camera == nullptr || WeaponMesh == nullptr)
 		return;
 	WeaponTargetPosition = Camera->GetForwardVector() * 10000.f + Camera->GetComponentLocation();
+	if (ActorLineTraceSingle(CameraForwardingHit, Camera->GetComponentLocation(), WeaponTargetPosition, ECollisionChannel::ECC_Camera, FCollisionObjectQueryParams::AllObjects))
+	{
+		WeaponTargetPosition = CameraForwardingHit.Location;
+	}
 	NewWeaponRotation = UKismetMathLibrary::FindLookAtRotation(WeaponMesh->GetComponentLocation(), WeaponTargetPosition);
 	if (IsLocallyControlled())
 		ServerRotateWeapons(NewWeaponRotation);
@@ -266,6 +283,22 @@ bool AHowTo_VehiculePawn::WheelsAreGrounded()
 			return true;
 	}
 	return false;
+}
+
+void AHowTo_VehiculePawn::StartTimer_InnactiveCamera()
+{
+	GetWorldTimerManager().SetTimer(m_InnactiveCameraTimer, this, &AHowTo_VehiculePawn::TimerHandle_InnactiveCameraEnd, INNACTIVE_CAMERA_COOLDOWN, true);
+}
+
+void AHowTo_VehiculePawn::StopTimer_InnactiveCamera()
+{
+	GetWorldTimerManager().ClearTimer(m_InnactiveCameraTimer);
+}
+
+void AHowTo_VehiculePawn::TimerHandle_InnactiveCameraEnd()
+{
+	m_IsResetingCamera = false;
+	StopTimer_InnactiveCamera();
 }
 
 #undef LOCTEXT_NAMESPACE
