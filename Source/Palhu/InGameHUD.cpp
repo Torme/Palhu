@@ -54,6 +54,7 @@ void AInGameHUD::UpdateValues()
 			{
 				m_CurrentTimer = GameState->GetTimer();
 				m_CurrentScores = GameState->GetCurrentScores();
+				m_CurrentTeam = Player->GetTeamIndex();
 			}
 		}
 	}
@@ -135,7 +136,6 @@ void AInGameHUD::DrawTeamScore()
 {
 	FText ScoreText;
 	FVector2D ScoreLocation;
-	AInGamePlayerController* PlayerController = Cast<AInGamePlayerController>(GetOwningPlayerController());
 
 	if (ScoreFont == nullptr)
 		return;
@@ -144,7 +144,7 @@ void AInGameHUD::DrawTeamScore()
 	{
 		ScoreText = FText::FromString(FString::FromInt(m_CurrentScores[i]));
 		ScoreLocation = FVector2D(Canvas->ClipX - ScoreOffset.X, Canvas->ClipY - ScoreOffset.Y + (20 * i));
-		FCanvasTextItem ScoreTextItem(ScoreLocation, ScoreText, ScoreFont, PlayerController->GetTeamIndex() == i ? FLinearColor::Red : FLinearColor::White);
+		FCanvasTextItem ScoreTextItem(ScoreLocation, ScoreText, ScoreFont, m_CurrentTeam == i ? FLinearColor::Red : FLinearColor::White);
 		ScoreTextItem.BlendMode = SE_BLEND_Translucent;
 		Canvas->DrawItem(ScoreTextItem);
 	}

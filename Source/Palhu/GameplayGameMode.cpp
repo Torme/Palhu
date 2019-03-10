@@ -4,6 +4,7 @@
 #include "GameplayTimerComponent.h"
 #include "PrintDebug.h"
 #include "InGameStateBase.h"
+#include "InGamePlayerController.h"
 
 AGameplayGameMode::AGameplayGameMode()
 {
@@ -27,7 +28,7 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 
 	if (GetNumPlayers() == 1)
 		StartPlay();
-	m_GameState->AddPlayer(NewPlayer);
+	Cast<AInGamePlayerController>(NewPlayer)->SetTeamIndex(m_GameState->AddPlayer(NewPlayer));
 	if (GetNumPlayers() > 1)
 	{
 		ResetLevel();

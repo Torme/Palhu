@@ -22,6 +22,7 @@ AInGameStateBase::AInGameStateBase()
 	m_Teams.Add(TeamB);
 }
 
+
 void	AInGameStateBase::GetLifetimeReplicatedProps(TArray < FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -54,7 +55,7 @@ TArray<int> AInGameStateBase::GetCurrentScores()
 	return CurrentScores;
 }
 
-void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
+int AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
 	int teamIndex = 0;
 	for (int i = 0; i < m_Teams.Num(); i++)
@@ -64,6 +65,7 @@ void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 		}
 	}
 	m_Teams[teamIndex].Players.Add(NewPlayer);
+	return teamIndex;
 	Cast<AInGamePlayerController>(NewPlayer)->SetTeamIndex(teamIndex);
 }
 
@@ -77,7 +79,12 @@ void AInGameStateBase::RestartAllPlayers()
 	}
 }
 
-void AInGameStateBase::CheckDeadPlayer()
+bool AInGameStateBase::CheckDeadPlayer_Validate()
+{
+	return true;
+}
+
+void AInGameStateBase::CheckDeadPlayer_Implementation()
 {
 	int i;
 	int oldScore;
@@ -90,6 +97,7 @@ void AInGameStateBase::CheckDeadPlayer()
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), i);
 		if (PlayerController != nullptr)
 		{
+			printf("team: %d", Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex());
 			if (PlayerController->GetPawn() == nullptr)
 			{
 				oldScore = m_Teams[Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex()].Score;

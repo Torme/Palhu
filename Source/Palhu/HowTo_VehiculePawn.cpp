@@ -72,6 +72,8 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	AddOwnedComponent(HealthComponent);
+
+	m_TeamIndex = 42;
 }
 
 void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -220,6 +222,46 @@ float AHowTo_VehiculePawn::GetCurrentSpeed() const
 int AHowTo_VehiculePawn::GetCurrentGear() const
 {
 	return GetVehicleMovement()->GetCurrentGear();
+}
+
+void AHowTo_VehiculePawn::Tick(float Delta)
+{
+	Super::Tick(Delta);
+
+	bInReverseGear = GetVehicleMovement()->GetCurrentGear() < 0;
+	if (IsLocallyControlled())
+	{
+		RotateSpringArm();
+		RotateWeapons();
+	}
+	if (HealthComponent->IsAlive() == false)
+	{
+		Destroy(this);
+	}
+}
+
+void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
+{
+	m_TeamIndex = newTeamIndex;
+}
+
+int AHowTo_VehiculePawn::GetTeamIndex()
+{
+	//printf("Get team: %d", m_TeamIndex);
+	return m_TeamIndex;
+}
+
+void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AHowTo_VehiculePawn, WeaponCurrentRotation);
+}
+
+void AHowTo_VehiculePawn::BeginPlay()
+{
+	Super::BeginPlay();
+
 }
 
 void AHowTo_VehiculePawn::RotateSpringArm()

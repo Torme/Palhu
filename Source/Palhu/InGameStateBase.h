@@ -13,10 +13,10 @@ struct FTeam
 
 	TArray<APlayerController* > Players;
 
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	uint32 Score;
 
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	FString Name;
 };
 
@@ -29,6 +29,7 @@ class PALHU_API AInGameStateBase : public AGameStateBase
 	int m_Timer;
 
 	//UPROPERTY(BlueprintReadOnly, Category = Test)
+
 	UPROPERTY(Replicated)
 	TArray<FTeam>	m_Teams;
 
@@ -37,10 +38,15 @@ public:
 
 	void	SetTimer(int newTimer);
 	void	RestartAllPlayers();
+
+	UFUNCTION(Server, Reliable, WithValidation)
 	void	CheckDeadPlayer();
+	bool	CheckDeadPlayer_Validate();
+	void	CheckDeadPlayer_Implementation();
+
 	int		GetTimer();
 	TArray<int>		GetCurrentScores();
-	void	AddPlayer(APlayerController* NewPlayer);
+	int	AddPlayer(APlayerController* NewPlayer);
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;
