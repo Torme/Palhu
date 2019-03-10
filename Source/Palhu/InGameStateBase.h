@@ -9,11 +9,14 @@
 USTRUCT()
 struct FTeam
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	TArray<APlayerController* > Players;
 
+	UPROPERTY(Replicated)
 	uint32 Score;
+
+	UPROPERTY(Replicated)
 	FString Name;
 };
 
