@@ -15,11 +15,18 @@ class PALHU_API UGameplayHUD : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintNativeEvent)
-		void SetTimerText(int TimerValue);
+	//UFUNCTION(BlueprintNativeEvent)
+	void SetTimerText(int TimerValue);
+	void SetCurrentTeamScore(int TeamScore);
+	void SetOtherTeamScore(int TeamScore);
 
-	virtual void SetTimerText_Implementation(int TimerValue);
+	//virtual void SetTimerText_Implementation(int TimerValue);
 
 	UPROPERTY(BlueprintReadOnly)
 		FString Timer;
+
+	UPROPERTY(BlueprintReadOnly)
+		FString CurrentTeamScore;
+	UPROPERTY(BlueprintReadOnly)
+		FString OtherTeamScore;
 };

@@ -55,7 +55,7 @@ TArray<int> AInGameStateBase::GetCurrentScores()
 	return CurrentScores;
 }
 
-int AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
+void AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 {
 	int teamIndex = 0;
 	for (int i = 0; i < m_Teams.Num(); i++)
@@ -65,7 +65,6 @@ int AInGameStateBase::AddPlayer(APlayerController* NewPlayer)
 		}
 	}
 	m_Teams[teamIndex].Players.Add(NewPlayer);
-	return teamIndex;
 	Cast<AInGamePlayerController>(NewPlayer)->SetTeamIndex(teamIndex);
 }
 
@@ -97,7 +96,6 @@ void AInGameStateBase::CheckDeadPlayer_Implementation()
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), i);
 		if (PlayerController != nullptr)
 		{
-			printf("team: %d", Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex());
 			if (PlayerController->GetPawn() == nullptr)
 			{
 				oldScore = m_Teams[Cast<AInGamePlayerController>(PlayerController)->GetTeamIndex()].Score;
