@@ -41,9 +41,17 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FRotator WeaponCurrentRotation;
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FRotator WeaponCurrentRotation;
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FRotator WeaponCurrentRotation;
 
 	UFUNCTION()
 	void OnRep_WeaponRotChange();
+	UFUNCTION()
+	void OnRep_RootMeshRotChange();
+	UFUNCTION()
+	void OnRep_RootMeshPosChange();
 
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		float FireCooldown;
