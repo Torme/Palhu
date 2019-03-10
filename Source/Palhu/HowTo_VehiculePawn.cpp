@@ -74,6 +74,11 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	AddOwnedComponent(HealthComponent);
 
 	m_bIsResetingCamera = false;
+	m_bIsFirePressed = false;
+	m_bFireCooldownIsOver = true;
+
+	FireCooldown = 0.2f;
+	WeaponCurrentRotation = WeaponMesh->GetComponentRotation();
 }
 
 void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -87,7 +92,8 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("CameraPitch", this, &AHowTo_VehiculePawn::PitchCamera);
 	PlayerInputComponent->BindAxis("CameraYaw", this, &AHowTo_VehiculePawn::YawCamera);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::BeginFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AHowTo_VehiculePawn::EndFire);
 	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
 	PlayerInputComponent->BindAction("ResetCamera", IE_Pressed, this, &AHowTo_VehiculePawn::ResetCamera);
 	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
@@ -106,6 +112,12 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 		else
 			RotateSpringArm();
 		RotateWeapons();
+		if (m_bIsFirePressed && m_bFireCooldownIsOver)
+		{
+			Fire();
+			m_bFireCooldownIsOver = false;
+			StartTimer_ShootCooldown();
+		}
 	}
 	if (HealthComponent->IsAlive() == false)
 	{
@@ -179,6 +191,16 @@ void AHowTo_VehiculePawn::ResetCamera()
 	m_BeginRotation = SpringArm->GetComponentRotation();
 	m_bIsResetingCamera = true;
 	m_CurrentCameraResetAlpha = 0.f;
+}
+
+void AHowTo_VehiculePawn::BeginFire()
+{
+	m_bIsFirePressed = true;
+}
+
+void AHowTo_VehiculePawn::EndFire()
+{
+	m_bIsFirePressed = false;
 }
 
 void AHowTo_VehiculePawn::OnHandbrakePressed()
@@ -296,6 +318,23 @@ void AHowTo_VehiculePawn::ResetSpringArmPosition(float Delta)
 	SpringArm->SetWorldRotation(FMath::Lerp(m_BeginRotation, TargetRotation, m_CurrentCameraResetAlpha));
 	if (m_CurrentCameraResetAlpha >= 1.f)
 		m_bIsResetingCamera = false;
+}
+
+void AHowTo_VehiculePawn::StartTimer_ShootCooldown()
+{
+	GetWorldTimerManager().SetTimer(m_FireCooldownTimer, this, &AHowTo_VehiculePawn::TimerHandle_ShootCooldownIsOver, FireCooldown, true);
+}
+
+void AHowTo_VehiculePawn::StopTimer_ShootCooldown()
+{
+	GetWorldTimerManager().ClearTimer(m_FireCooldownTimer);
+}
+
+void AHowTo_VehiculePawn::TimerHandle_ShootCooldownIsOver()
+{
+	m_bFireCooldownIsOver = true;
+	if (m_bIsFirePressed == false)
+		StopTimer_ShootCooldown();
 }
 
 #undef LOCTEXT_NAMESPACE

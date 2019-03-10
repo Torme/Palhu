@@ -45,6 +45,9 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 	UFUNCTION()
 	void OnRep_WeaponRotChange();
 
+	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		float FireCooldown;
+
 	
 public:
 	AHowTo_VehiculePawn();
@@ -74,6 +77,8 @@ public:
 	void PitchCamera(float val);
 	void YawCamera(float val);
 	void ResetCamera();
+	void BeginFire();
+	void EndFire();
 	void Fire();
 
 	/*UFUNCTION(Server, Reliable, WithValidation)
@@ -114,4 +119,12 @@ private:
 	bool m_bIsResetingCamera;
 	float m_CurrentCameraResetAlpha;
 
+	bool m_bIsFirePressed;
+	
+	FTimerHandle m_FireCooldownTimer;
+	bool m_bFireCooldownIsOver;
+
+	void StartTimer_ShootCooldown();
+	void StopTimer_ShootCooldown();
+	void TimerHandle_ShootCooldownIsOver();
 };
