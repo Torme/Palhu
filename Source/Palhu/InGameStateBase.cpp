@@ -15,9 +15,9 @@ AInGameStateBase::AInGameStateBase()
 	FTeam TeamB;
 
 	TeamA.Name = "A";
-	TeamA.Score = 2;
+	TeamA.Score = 4;
 	TeamB.Name = "B";
-	TeamB.Score = 2;
+	TeamB.Score = 4;
 	m_Teams.Add(TeamA);
 	m_Teams.Add(TeamB);
 }
