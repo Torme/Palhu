@@ -18,8 +18,14 @@ public:
 	AInGamePlayerController();
 
 	int GetTeamIndex();
+
 	void SetTeamIndex(int newTeamIndex);
 
+protected:
+	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;
+
 private:
-	bool m_Initialized;
+
+	UPROPERTY(Replicated)
+	int m_TeamIndex;
 };

@@ -70,7 +70,7 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	AddOwnedComponent(HealthComponent);
 
-	m_TeamIndex = 42;
+	//m_TeamIndex = 42;
 }
 
 void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -199,16 +199,16 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	}
 }
 
-void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
-{
-	m_TeamIndex = newTeamIndex;
-}
-
-int AHowTo_VehiculePawn::GetTeamIndex()
-{
-	//printf("Get team: %d", m_TeamIndex);
-	return m_TeamIndex;
-}
+//void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
+//{
+//	m_TeamIndex = newTeamIndex;
+//}
+//
+//int AHowTo_VehiculePawn::GetTeamIndex()
+//{
+//	//printf("Get team: %d", m_TeamIndex);
+//	return m_TeamIndex;
+//}
 
 void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

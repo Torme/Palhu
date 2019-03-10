@@ -46,7 +46,7 @@ public:
 
 	int		GetTimer();
 	TArray<int>		GetCurrentScores();
-	int	AddPlayer(APlayerController* NewPlayer);
+	void	AddPlayer(APlayerController* NewPlayer);
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;

@@ -61,8 +61,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void SetTeamIndex (int newTeamIndex);
-	int	GetTeamIndex();
+	//void SetTeamIndex (int newTeamIndex);
+	//int	GetTeamIndex();
 
 protected:
 	virtual void BeginPlay() override;
@@ -107,5 +107,5 @@ private:
 	bool WheelsAreGrounded();
 
 	FVector2D m_CameraInput;
-	int m_TeamIndex;
+	//int m_TeamIndex;
 };

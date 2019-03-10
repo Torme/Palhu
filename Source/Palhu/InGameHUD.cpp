@@ -54,7 +54,7 @@ void AInGameHUD::UpdateValues()
 			{
 				m_CurrentTimer = GameState->GetTimer();
 				m_CurrentScores = GameState->GetCurrentScores();
-				m_CurrentTeam = Player->GetTeamIndex();
+				m_CurrentTeam = Cast<AInGamePlayerController>(GetOwningPlayerController())->GetTeamIndex();
 			}
 		}
 	}
@@ -139,7 +139,6 @@ void AInGameHUD::DrawTeamScore()
 
 	if (ScoreFont == nullptr)
 		return;
-	//printf("team: %d", PlayerController->GetTeamIndex());
 	for (int i = 0; i < m_CurrentScores.Num(); i++)
 	{
 		ScoreText = FText::FromString(FString::FromInt(m_CurrentScores[i]));

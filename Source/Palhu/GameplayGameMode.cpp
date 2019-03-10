@@ -28,7 +28,7 @@ void AGameplayGameMode::PostLogin(APlayerController * NewPlayer)
 
 	if (GetNumPlayers() == 1)
 		StartPlay();
-	Cast<AInGamePlayerController>(NewPlayer)->SetTeamIndex(m_GameState->AddPlayer(NewPlayer));
+	m_GameState->AddPlayer(NewPlayer);
 	if (GetNumPlayers() > 1)
 	{
 		ResetLevel();
