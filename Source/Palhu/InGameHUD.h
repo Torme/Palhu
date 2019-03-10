@@ -72,5 +72,6 @@ class PALHU_API AInGameHUD : public AHUD
 		float m_CurrentSpeed;
 		int m_CurrentGear;
 		int m_CurrentTimer;
+		int m_CurrentTeam;
 		TArray<int> m_CurrentScores;
 	};

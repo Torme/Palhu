@@ -2,25 +2,32 @@
 
 #include "InGamePlayerController.h"
 #include "PrintDebug.h"
+#include "HowTo_VehiculePawn.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
-	m_TeamIndex = 42;
+	m_Initialized = false;
 }
 
-bool AInGamePlayerController::SetTeamIndex_Validate(int newTeamIndex)
+void AInGamePlayerController::SetTeamIndex(int newTeamIndex)
 {
-	return true;
-}
-
-void AInGamePlayerController::SetTeamIndex_Implementation(int newTeamIndex)
-{
-	printf("teamIndex: %d", newTeamIndex);
-	m_TeamIndex = newTeamIndex;
+	AHowTo_VehiculePawn	*CurrentPawn = Cast<AHowTo_VehiculePawn>(GetPawn());
+	m_Initialized = true;
+	if (CurrentPawn != nullptr)
+	{
+		CurrentPawn->SetTeamIndex(newTeamIndex);
+	}
 }
 
 int AInGamePlayerController::GetTeamIndex()
 {
-	//printf("Get team: %d", m_TeamIndex);
-	return m_TeamIndex;
+	if (m_Initialized)
+	{
+		AHowTo_VehiculePawn	*CurrentPawn = Cast<AHowTo_VehiculePawn>(GetPawn());
+		if (CurrentPawn != nullptr)
+		{
+			return CurrentPawn->GetTeamIndex();
+		}
+	}
+	return 42;
 }

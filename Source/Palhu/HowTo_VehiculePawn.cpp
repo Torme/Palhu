@@ -69,6 +69,8 @@ AHowTo_VehiculePawn::AHowTo_VehiculePawn()
 	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	AddOwnedComponent(HealthComponent);
+
+	m_TeamIndex = 42;
 }
 
 void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -84,7 +86,7 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("CameraYaw", this, &AHowTo_VehiculePawn::YawCamera);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::Fire);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
 	PlayerInputComponent->BindAction("ResetCamera", IE_Pressed, this, &AHowTo_VehiculePawn::ResetCamera);
 	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
 	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
@@ -195,6 +197,17 @@ void AHowTo_VehiculePawn::Tick(float Delta)
 	{
 		Destroy(this);
 	}
+}
+
+void AHowTo_VehiculePawn::SetTeamIndex(int newTeamIndex)
+{
+	m_TeamIndex = newTeamIndex;
+}
+
+int AHowTo_VehiculePawn::GetTeamIndex()
+{
+	//printf("Get team: %d", m_TeamIndex);
+	return m_TeamIndex;
 }
 
 void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
