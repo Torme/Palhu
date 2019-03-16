@@ -14,6 +14,7 @@ class UInputComponent;
 class USkeletalMeshComponent;
 class UWeaponComponent;
 class UHealthComponent;
+class UMaterial;
 
 UCLASS(config=Game)
 class AHowTo_VehiculePawn : public AWheeledVehicle
@@ -41,21 +42,25 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FRotator WeaponCurrentRotation;
-	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	/*UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FRotator WeaponCurrentRotation;
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FRotator WeaponCurrentRotation;
+	FRotator WeaponCurrentRotation;*/
 
 	UFUNCTION()
 	void OnRep_WeaponRotChange();
-	UFUNCTION()
+	/*UFUNCTION()
 	void OnRep_RootMeshRotChange();
 	UFUNCTION()
-	void OnRep_RootMeshPosChange();
+	void OnRep_RootMeshPosChange();*/
 
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		float FireCooldown;
 
+	UPROPERTY(Category = Apparence, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TArray<int> MaterialsIndex;
+	UPROPERTY(Category = Apparence, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		TMap<int, UMaterial*> Materials;
 	
 public:
 	AHowTo_VehiculePawn();
@@ -89,10 +94,10 @@ public:
 	void EndFire();
 	void Fire();
 
-	/*UFUNCTION(Server, Reliable, WithValidation)
+	UFUNCTION(Server, Reliable, WithValidation)
 	void Jump();
 	void Jump_Implementation();
-	bool Jump_Validate();*/
+	bool Jump_Validate();
 
 	void OnHandbrakePressed();
 	void OnHandbrakeReleased();

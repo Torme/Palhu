@@ -20,6 +20,7 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/Public/TimerManager.h"
 #include "UnrealNetwork.h"
+#include "InGamePlayerController.h"
 
 #include "PrintDebug.h"
 
@@ -94,7 +95,7 @@ void AHowTo_VehiculePawn::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AHowTo_VehiculePawn::BeginFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AHowTo_VehiculePawn::EndFire);
-	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHowTo_VehiculePawn::Jump);
 	PlayerInputComponent->BindAction("ResetCamera", IE_Pressed, this, &AHowTo_VehiculePawn::ResetCamera);
 	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &AHowTo_VehiculePawn::OnHandbrakePressed);
 	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &AHowTo_VehiculePawn::OnHandbrakeReleased);
@@ -134,8 +135,22 @@ void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 void AHowTo_VehiculePawn::BeginPlay()
 {
-	Super::BeginPlay();
+	AInGamePlayerController *controller;
+	int currentTeamIndex;
+	UMaterial *materialToUse;
 
+	Super::BeginPlay();
+	if ((controller = GetController<AInGamePlayerController>()) == nullptr || 
+		GetMesh() == nullptr)
+		return;
+	currentTeamIndex = controller->GetTeamIndex();
+	printf("My team index: %d", currentTeamIndex);
+	for (size_t i = 0; i < MaterialsIndex.Num(); i++)
+		if (Materials.Contains(currentTeamIndex))
+		{
+			materialToUse = Materials[currentTeamIndex];
+			GetMesh()->SetMaterial(MaterialsIndex[i], materialToUse);
+		}
 }
 
 void AHowTo_VehiculePawn::MoveForward(float Val)
@@ -153,21 +168,20 @@ void AHowTo_VehiculePawn::Fire()
 		WeaponComponent->SpawnProjectile(RelativTransform, this);
 }
 
-//void AHowTo_VehiculePawn::Jump_Implementation()
-//{
-//	USkeletalMeshComponent* RootMesh = GetMesh();
-//
-//	if (RootMesh && RootMesh->IsSimulatingPhysics() && WheelsAreGrounded())
-//	{
-//		
-//		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
-//	}
-//}
-//
-//bool AHowTo_VehiculePawn::Jump_Validate()
-//{
-//	return true;
-//}
+void AHowTo_VehiculePawn::Jump_Implementation()
+{
+	USkeletalMeshComponent* RootMesh = GetMesh();
+
+	if (RootMesh && RootMesh->IsSimulatingPhysics() && WheelsAreGrounded())
+	{
+		RootMesh->AddImpulse(FVector::UpVector * JumpMultiplier);
+	}
+}
+
+bool AHowTo_VehiculePawn::Jump_Validate()
+{
+	return true;
+}
 
 void AHowTo_VehiculePawn::MoveRight(float Val)
 {
