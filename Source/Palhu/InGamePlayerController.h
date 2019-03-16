@@ -21,6 +21,10 @@ public:
 	void SetTeamIndex(int newTeamIndex);
 	int GetTeamIndex();
 
+	UFUNCTION(BlueprintCosmetic, Client, Unreliable)
+	void UpdatePawnsMaterials();
+	void UpdatePawnsMaterials_Implementation();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 		TSubclassOf<class UUserWidget> wGameHUD;
 

@@ -48,6 +48,8 @@ public:
 	TArray<int>		GetCurrentScores();
 	void	AddPlayer(APlayerController* NewPlayer);
 
+	FORCEINLINE TArray<FTeam> GetTeams() const { return m_Teams; }
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const override;
 	//virtual void BeginPlay() override;

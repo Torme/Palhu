@@ -42,25 +42,17 @@ class AHowTo_VehiculePawn : public AWheeledVehicle
 
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FRotator WeaponCurrentRotation;
-	/*UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FRotator WeaponCurrentRotation;
-	UPROPERTY(Transient, ReplicatedUsing = OnRep_WeaponRotChange, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FRotator WeaponCurrentRotation;*/
-
+	
 	UFUNCTION()
 	void OnRep_WeaponRotChange();
-	/*UFUNCTION()
-	void OnRep_RootMeshRotChange();
-	UFUNCTION()
-	void OnRep_RootMeshPosChange();*/
-
+	
 	UPROPERTY(Category = Weapon, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		float FireCooldown;
+	float FireCooldown;
 
 	UPROPERTY(Category = Apparence, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TArray<int> MaterialsIndex;
+	TArray<int> MaterialsIndex;
 	UPROPERTY(Category = Apparence, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TMap<int, UMaterial*> Materials;
+	TMap<int, UMaterial*> Materials;
 	
 public:
 	AHowTo_VehiculePawn();
@@ -72,17 +64,18 @@ public:
 	float JumpMultiplier;
 
 	UPROPERTY(Category = Debug, EditAnywhere, BlueprintReadOnly)
-		FVector WeaponTargetPos;
+	FVector WeaponTargetPos;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	virtual void Tick(float Delta) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	//void SetTeamIndex (int newTeamIndex);
-	//int	GetTeamIndex();
+	
+	UFUNCTION(BlueprintCosmetic)
+	void UpdateMaterials();
 
 protected:
 	virtual void BeginPlay() override;
+
 
 public:
 	void MoveForward(float Val);
@@ -110,6 +103,7 @@ public:
 	FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArm; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
 	FORCEINLINE UHealthComponent* GetHealth() const { return HealthComponent; }
+	FORCEINLINE FRotator GetWeaponCurrentRotation() const { return WeaponCurrentRotation; }
 
 private:
 	static float SPRING_ARM_DEFAULT_PITCH;

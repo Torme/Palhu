@@ -5,6 +5,8 @@
 #include "PrintDebug.h"
 #include "InGameStateBase.h"
 #include "GamePlayHud.h"
+#include "HowTo_VehiculePawn.h"
+#include "Engine/Public/EngineUtils.h"
 
 AInGamePlayerController::AInGamePlayerController()
 {
@@ -29,6 +31,7 @@ void AInGamePlayerController::BeginPlay()
 		}
 		m_Started = true;
 	}
+	UpdatePawnsMaterials();
 }
 
 void AInGamePlayerController::GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const
@@ -44,6 +47,23 @@ void AInGamePlayerController::SetTeamIndex(int newTeamIndex)
 int AInGamePlayerController::GetTeamIndex()
 {
 	return m_TeamIndex;
+}
+
+void AInGamePlayerController::UpdatePawnsMaterials_Implementation()
+{
+	if (GetWorld() == nullptr)
+		return;
+
+	if (IsLocalPlayerController())
+	{
+		for (TActorIterator<AHowTo_VehiculePawn> PlayerItr(GetWorld()); PlayerItr; ++PlayerItr)
+		{
+			AHowTo_VehiculePawn* PlayerVehicle = *PlayerItr;
+			if (PlayerVehicle == nullptr)
+				continue;
+			PlayerVehicle->UpdateMaterials();
+		}
+	}
 }
 
 void AInGamePlayerController::PlayerTick(float DeltaTime)

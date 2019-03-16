@@ -21,6 +21,7 @@
 #include "Engine/Public/TimerManager.h"
 #include "UnrealNetwork.h"
 #include "InGamePlayerController.h"
+#include "InGameStateBase.h"
 
 #include "PrintDebug.h"
 
@@ -135,22 +136,8 @@ void AHowTo_VehiculePawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 void AHowTo_VehiculePawn::BeginPlay()
 {
-	AInGamePlayerController *controller;
-	int currentTeamIndex;
-	UMaterial *materialToUse;
-
 	Super::BeginPlay();
-	if ((controller = GetController<AInGamePlayerController>()) == nullptr || 
-		GetMesh() == nullptr)
-		return;
-	currentTeamIndex = controller->GetTeamIndex();
-	printf("My team index: %d", currentTeamIndex);
-	for (size_t i = 0; i < MaterialsIndex.Num(); i++)
-		if (Materials.Contains(currentTeamIndex))
-		{
-			materialToUse = Materials[currentTeamIndex];
-			GetMesh()->SetMaterial(MaterialsIndex[i], materialToUse);
-		}
+	//UpdateMaterials();
 }
 
 void AHowTo_VehiculePawn::MoveForward(float Val)
@@ -225,6 +212,35 @@ void AHowTo_VehiculePawn::OnHandbrakePressed()
 void AHowTo_VehiculePawn::OnHandbrakeReleased()
 {
 	GetVehicleMovementComponent()->SetHandbrakeInput(false);
+}
+
+void AHowTo_VehiculePawn::UpdateMaterials()
+{
+	//AInGamePlayerController *controller;
+	//int currentTeamIndex;
+	UMaterial *materialToUse;
+
+	TArray<FTeam> teams = GetWorld()->GetGameState<AInGameStateBase>()->GetTeams();
+	printf("begining: %d", teams.Num());
+	for (size_t i = 0; i < teams.Num(); i++)
+	{
+		printf("loop %d", teams[i].Players.Num());
+		for (size_t j = 0; j < teams[i].Players.Num(); j++)
+		{
+			printf("Iterate into player controllers: %s", *teams[i].Players[j]->GetName());
+		}
+	}
+	if (//(controller = GetController<AInGamePlayerController>()) == nullptr ||
+		GetMesh() == nullptr)
+		return;
+	//currentTeamIndex = controller->GetTeamIndex();
+	materialToUse = Materials[0];
+	for (size_t i = 0; i < MaterialsIndex.Num(); i++)
+		//if (Materials.Contains(currentTeamIndex))
+		{
+			//materialToUse = Materials[currentTeamIndex];
+			GetMesh()->SetMaterial(MaterialsIndex[i], materialToUse);
+		}
 }
 
 int AHowTo_VehiculePawn::GetMaxHealth() const
